@@ -114,7 +114,22 @@ $app->get('/api/smiles/{width}/{height}/{bgcolor}/{fgcolor}/{smiles}', function 
     list($r, $g, $b) = sscanf($fgcolor, "%02x%02x%02x");
     $n = 100 / 255;
     $molecule->colorize($n * $r, $n * $g, $n * $b);
-   
+    
+    // Shrink molecule to desired portion of background if needed.
+    $proportion = 0.6;
+    $px = $molecule->getWidth() / $img->getWidth();
+    $py = $molecule->getHeight() / $img->getHeight();
+    while ($px > $proportion || $py > $proportion) {
+        if ($px > $proportion) {
+            $factor = ($img->getWidth() * $proportion) / $molecule->getWidth();
+        } else {
+            $factor = ($img->getHeight() * $proportion) / $molecule->getHeight();
+        }
+        $molecule->resize($molecule->getWidth() * $factor, $molecule->getHeight() * $factor);
+        $px = $molecule->getWidth() / $img->getWidth();
+        $py = $molecule->getHeight() / $img->getHeight();
+    }
+    
     // Center molecule on background.
     $img->insert($molecule, 'center');
     
@@ -127,7 +142,7 @@ $app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($wi
     // Convert chemical name to SMILES if we can.
     $client = new GuzzleHttp\Client(['verify' => false, 'exceptions'=>false]);
     $res = $client->request('GET', str_replace('$name', $name, $config['chem_name_lookup_service']));
-
+    
     if ($res->getStatusCode() == 200) {
         
         // Forward  to SMILES route.
