@@ -1,0 +1,20 @@
+{
+  "name": "lambdacasserole/silex-base",
+  "version": "1.0.0",
+  "homepage": "https://github.com/lambdacasserole/silex-base",
+  "authors": [
+    "Saul Johnson <saul.a.johnson@gmail.com>"
+  ],
+  "description": "Basic Silex project for a simple website.",
+  "keywords": [
+    "basic",
+    "silex",
+    "simple",
+    "website"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "~3.3.1",
+    "bootswatch": "^3.3.6"
+  }
+}

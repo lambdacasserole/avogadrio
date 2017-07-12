@@ -1,0 +1,34 @@
+{
+  "name": "silex-base",
+  "version": "1.0.0",
+  "description": "Basic Silex project for a simple website.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lambdacasserole/silex-base"
+  },
+  "keywords": [
+    "basic",
+    "silex",
+    "simple",
+    "website"
+  ],
+  "author": "Saul Johnson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lambdacasserole/silex-base/issues"
+  },
+  "homepage": "https://github.com/lambdacasserole/silex-base",
+  "devDependencies": {
+    "bower": "~1.4.1",
+    "es6-promise": "^3.2.1",
+    "gulp": "^3.8.8",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-coffee": "^2.2.0",
+    "gulp-less": "^1.3.6",
+    "gulp-minify-css": "^1.2.4"
+  }
+}

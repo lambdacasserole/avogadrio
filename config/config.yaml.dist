@@ -1,0 +1,12 @@
+# Don't commit this file to source control, it contains your secret settings.
+
+contact_form_from: ~ # This is the email address that contact form correspondence will be sent from.
+contact_form_from_name: ~ # This is the name that contact form correspondence will be sent from.
+contact_form_target: ~ # This is the email address that contact form correspondence will be sent to.
+linkedin_url: ~ # The URL of your LinkedIn profile.
+twitter_url: ~ # The URL of your Twitter profile.
+github_url: ~ # The URL of your GitHub profile.
+blogger_url: ~ # The URL of your blog on Blogger.
+blogger_atom_url: ~ # The URL of your blog's Atom feed on Blogger.
+chem_name_lookup_service: ~ # The URL of the service to use to look up chemical names.
+sourire_service: ~ # The URL of the Sourire molecule rendering service.

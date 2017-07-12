@@ -1,0 +1,73 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Contact{% endblock %}
+
+{% block banner %}
+<div class="banner-small">
+    <div class="banner-giant-divider-top"></div>
+    <div class="banner-giant-divider-bottom"></div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Contact</h1>
+        <p>
+            Please use the form below to contact me.
+        </p>
+        {% if post %}
+            {% if success %}
+            <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <p><b>Thank you for your message!</b></p>
+                <p>
+                    I'll get back to you as soon as I can.
+                </p>
+            </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <p><b>Couple of problems...</b></p>
+                    <p>
+                        There was a problem or two with some of the information you submitted. Please correct the
+                        following and try again:
+                    </p>
+                    <ul>
+                        {% for error in errors %}
+                            <li>
+                                {{ error }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+<form method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <label for="name">Name</label>
+            <input id="name" type="text" class="form-control" name="name">
+        </div>
+        <div class="col-md-6">
+            <label for="email">Email</label>
+            <input id="email" type="email" class="form-control" name="email">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label for="message">Message</label>
+            <textarea id="message" class="form-control" name="message"></textarea>
+        </div>
+    </div>
+    <div class="row mt-plus">
+        <div class="col-md-12">
+            <p class="pull-right">
+                <input type="submit" class="btn btn-primary" value="Send">
+            </p>
+        </div>
+    </div>
+</form>
+{% endblock %}

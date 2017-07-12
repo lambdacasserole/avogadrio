@@ -1,0 +1,32 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Blog{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src=""></script>
+<script type="text/javascript" src="/js/blog.js"></script>
+{% endblock %}
+
+{% block banner %}
+<div class="banner-giant-lavender">
+    <div class="banner-giant-container">
+        <div class="banner-giant-text">
+            <img src="/images/icon.png" class="logo"/>
+            <h3>My Blog</h3>
+            <p>
+                Suspendisse quis rhoncus felis, non vulputate est.
+            </p>
+            <a class="btn btn-default" href="{{ blogger_url }}">Blogger</a>
+            <a class="btn btn-warning" target="_blank" href="{{ blogger_atom_url }}">Atom</a>
+        </div>
+    </div>
+    <div class="banner-giant-divider-top"></div>
+    <div class="banner-giant-divider-bottom"></div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 js-blog-posts"></div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{
+    "name": "lambdacasserole/silex-base",
+    "description": "Basic Silex project for a simple website.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Saul Johnson",
+            "email": "saul.a.johnson@gmail.com"
+        }
+    ],
+    "require": {
+        "silex/silex": "~2.0",
+        "twig/twig": "^1.24",
+        "mustangostang/spyc": "^0.5.1",
+        "intervention/image": "^2.4",
+        "guzzlehttp/guzzle": "^6.3"
+    }
+}
