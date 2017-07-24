@@ -61,7 +61,7 @@ function renderScaledMolecule($canvasWidth, $canvasHeight, $color, $smiles) {
     return $molecule;
 }
 
-function nameToSmiles($name) use ($config) {
+function nameToSmiles($config, $name) {
     // Convert chemical name to SMILES if we can.
     $client = new GuzzleHttp\Client(['verify' => false, 'exceptions'=>false]);
     $res = $client->request('GET', str_replace('$name', $name, $config['chem_name_lookup_service']));
@@ -95,7 +95,7 @@ $app->get('/api/smiles/{width}/{height}/{bgcolor}/{fgcolor}/{smiles}', function 
 $app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($width, $height, $bgcolor, $fgcolor, $name) use ($app, $twig, $config) {
     
     // Convert chemical name to SMILES if we can.
-        $smiles = nameToSmiles($name);
+    $smiles = nameToSmiles($config, $name);
     
     if ($smiles !== null) {
         
