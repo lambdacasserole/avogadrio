@@ -6,9 +6,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Intervention\Image\ImageManagerStatic as Image;
 
+// Configure GD as image driver.
 Image::configure(array('driver' => 'gd'));
 
-$config = Spyc::YAMLLoad(__DIR__.'/../config/config.yaml'); // Load config.
+// Load config.
+$config = Spyc::YAMLLoad(__DIR__.'/../config/config.yaml');
 
 $app = new Silex\Application();
 
@@ -22,6 +24,56 @@ $twig = new Twig_Environment($loader, array(
 ));
 
 /*
+ * Rendering functions.
+ */
+
+/**
+ * @param string $color
+ * @param string $smiles
+ * @return \Intervention\Image\Image
+ */
+function renderMolecule($color, $smiles) {
+    // Proxy into Sourire for molecule render.
+    $molecule = Image::make('http://localhost:8080/molecule/' . urlencode($smiles));
+
+    // Colorize molecule.
+    list($r, $g, $b) = sscanf($color, "%02x%02x%02x");
+    $n = 100 / 255;
+    $molecule->colorize($n * $r, $n * $g, $n * $b);
+    return $molecule;
+}
+
+function renderScaledMolecule($canvasWidth, $canvasHeight, $color, $smiles) {
+    $molecule = renderMolecule($color, $smiles);
+    $proportion = 0.6;
+    $px = $molecule->getWidth() / $canvasWidth;
+    $py = $molecule->getHeight() / $canvasHeight;
+    while ($px > $proportion || $py > $proportion) {
+        if ($px > $proportion) {
+            $factor = ($canvasWidth * $proportion) / $molecule->getWidth();
+        } else {
+            $factor = ($canvasHeight * $proportion) / $molecule->getHeight();
+        }
+        $molecule->resize($molecule->getWidth() * $factor, $molecule->getHeight() * $factor);
+        $px = $molecule->getWidth() / $canvasWidth;
+        $py = $molecule->getHeight() / $canvasHeight;
+    }
+    return $molecule;
+}
+
+function nameToSmiles($name) {
+    // Convert chemical name to SMILES if we can.
+    $client = new GuzzleHttp\Client(['verify' => false, 'exceptions'=>false]);
+    $res = $client->request('GET', str_replace('$name', $name, $config['chem_name_lookup_service']));
+
+    if ($res->getStatusCode() == 200) {
+        return $res->getBody();
+    } else {
+        return null;
+    }
+}
+
+/*
  * Route actions.
  */
 
@@ -29,108 +81,15 @@ $app->get('/', function () use ($twig, $config) {
     return $twig->render('index.html.twig', $config);
 });
 
-$app->get('/contact', function () use ($twig, $config) {
-    return $twig->render('contact.html.twig', $config);
-});
-
-$app->post('/contact', function () use ($twig, $config) {
-    // Collect form fields.
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $message = $_POST['message'];
-
-    // Validate form.
-    $errors = [];
-    if (strlen($name) < 2) {
-        $errors[] = 'The name you provide needs to 2 or more characters in length.';
-    }
-    if (strlen($message) < 30) {
-        $errors[] = 'The message you submit needs to be 30 or more characters in length.';
-    }
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'The email address you provided is invalid.';
-    }
-
-    // Send message if no errors.
-    if (sizeof($errors) == 0) {
-        
-        // Prepare headers.
-        $headers =  'MIME-Version: 1.0' . "\r\n"; 
-        $headers .= 'From: ' . $config['contact_form_from_name'] . ' <' . $config['contact_form_from'] . '>' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n"; 
-
-        mail($config['contact_form_target'], 'Website contact', "Name: $name\r\nWebsite: $website\r\nEmail: $email\r\nMessage: $message", $headers);
-    }
-
-    // Render contact page with success/error message.
-    $vars = array_merge($config, array(
-        'success' => sizeof($errors) == 0,
-        'errors' => $errors,
-        'post' => $_POST
-    ));
-    return $twig->render('contact.html.twig', $vars);
-});
-
-$app->get('/linkedin', function () use ($twig, $config) {
-    header('Location: ' . $config['linkedin_url']);
-    die();
-});
-
-$app->get('/twitter', function () use ($twig, $config) {
-    header('Location: ' . $config['twitter_url']);
-    die();
-});
-
-$app->get('/github', function () use ($twig, $config) {
-    header('Location: ' . $config['github_url']);
-    die();
-});
-
-$app->get('/project-1', function () use ($twig, $config) {
-    return $twig->render('project-1.html.twig', $config);
-});
-
-$app->get('/project-2', function () use ($twig, $config) {
-    return $twig->render('project-2.html.twig', $config);
-});
-
-$app->get('/project-3', function () use ($twig, $config) {
-    return $twig->render('project-3.html.twig', $config);
-});
-
-$app->get('/blog', function () use ($twig, $config) {
-    return $twig->render('blog.html.twig', $config);
-});
-
 $app->get('/api/smiles/{width}/{height}/{bgcolor}/{fgcolor}/{smiles}', function ($width, $height, $bgcolor, $fgcolor, $smiles) use ($twig, $config) {
     
     // Set up background.
     $img = Image::canvas($width, $height, "#$bgcolor");
     
-    // Proxy into Sourire for molecule render.
-    $molecule = Image::make('http://localhost:8080/molecule/' . urlencode($smiles));
+    // Render molecule.
+    $molecule = renderScaledMolecule($width, $height, $fgcolor, $smiles);
     
-    // Colorize molecule.
-    list($r, $g, $b) = sscanf($fgcolor, "%02x%02x%02x");
-    $n = 100 / 255;
-    $molecule->colorize($n * $r, $n * $g, $n * $b);
-    
-    // Shrink molecule to desired portion of background if needed.
-    $proportion = 0.6;
-    $px = $molecule->getWidth() / $img->getWidth();
-    $py = $molecule->getHeight() / $img->getHeight();
-    while ($px > $proportion || $py > $proportion) {
-        if ($px > $proportion) {
-            $factor = ($img->getWidth() * $proportion) / $molecule->getWidth();
-        } else {
-            $factor = ($img->getHeight() * $proportion) / $molecule->getHeight();
-        }
-        $molecule->resize($molecule->getWidth() * $factor, $molecule->getHeight() * $factor);
-        $px = $molecule->getWidth() / $img->getWidth();
-        $py = $molecule->getHeight() / $img->getHeight();
-    }
-    
-    // Center molecule on background.
+    // Center on background.
     $img->insert($molecule, 'center');
     
     // Send image out
@@ -140,13 +99,11 @@ $app->get('/api/smiles/{width}/{height}/{bgcolor}/{fgcolor}/{smiles}', function 
 $app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($width, $height, $bgcolor, $fgcolor, $name) use ($app, $twig, $config) {
     
     // Convert chemical name to SMILES if we can.
-    $client = new GuzzleHttp\Client(['verify' => false, 'exceptions'=>false]);
-    $res = $client->request('GET', str_replace('$name', $name, $config['chem_name_lookup_service']));
+        $smiles = nameToSmiles($name);
     
-    if ($res->getStatusCode() == 200) {
+    if ($smiles !== null) {
         
         // Forward  to SMILES route.
-        $smiles = $res->getBody();
         $smilesRequest = Request::create("/api/smiles/$width/$height/$bgcolor/$fgcolor/$smiles", 'GET');
         return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
     } else {
@@ -158,43 +115,18 @@ $app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($wi
 
 $app->get('/api/smiles/{width}/{height}/{fgcolor}/{smiles}', function ($width, $height, $fgcolor, $smiles) use ($app, $twig, $config) {
     
-    // Proxy into Sourire for molecule render.
-    $molecule = Image::make('http://localhost:8080/molecule/' . urlencode($smiles));
     
-    // Colorize molecule.
-    list($r, $g, $b) = sscanf($fgcolor, "%02x%02x%02x");
-    $n = 100 / 255;
-    $molecule->colorize($n * $r, $n * $g, $n * $b);
-    
-    // Shrink molecule to desired portion of background if needed.
-    $proportion = 0.6;
-    $px = $molecule->getWidth() / $width;
-    $py = $molecule->getHeight() / $height;
-    while ($px > $proportion || $py > $proportion) {
-        if ($px > $proportion) {
-            $factor = ($width * $proportion) / $molecule->getWidth();
-        } else {
-            $factor = ($height * $proportion) / $molecule->getHeight();
-        }
-        $molecule->resize($molecule->getWidth() * $factor, $molecule->getHeight() * $factor);
-        $px = $molecule->getWidth() / $width;
-        $py = $molecule->getHeight() / $height;
-    }
-    
-    // Send image out
-    echo $molecule->response();
+    return renderScaledMolecule($width, $height, $fgcolor, $smiles)->response();
 });
 
 $app->get('/api/name/{width}/{height}/{fgcolor}/{name}', function ($width, $height, $fgcolor, $name) use ($app, $twig, $config) {
     
     // Convert chemical name to SMILES if we can.
-    $client = new GuzzleHttp\Client(['verify' => false, 'exceptions'=>false]);
-    $res = $client->request('GET', str_replace('$name', $name, $config['chem_name_lookup_service']));
+        $smiles = nameToSmiles($name);
     
-    if ($res->getStatusCode() == 200) {
+    if ($smiles !== null) {
         
         // Forward  to SMILES route.
-        $smiles = $res->getBody();
         $smilesRequest = Request::create("/api/smiles/$width/$height/$fgcolor/$smiles", 'GET');
         return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
     } else {
