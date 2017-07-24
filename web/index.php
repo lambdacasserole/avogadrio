@@ -61,16 +61,12 @@ function renderScaledMolecule($canvasWidth, $canvasHeight, $color, $smiles) {
     return $molecule;
 }
 
-function nameToSmiles($name) {
+function nameToSmiles($name) use ($config) {
     // Convert chemical name to SMILES if we can.
     $client = new GuzzleHttp\Client(['verify' => false, 'exceptions'=>false]);
     $res = $client->request('GET', str_replace('$name', $name, $config['chem_name_lookup_service']));
 
-    if ($res->getStatusCode() == 200) {
-        return $res->getBody();
-    } else {
-        return null;
-    }
+    return $res->getStatusCode() == 200 ? $res->getBody() : null;
 }
 
 /*
