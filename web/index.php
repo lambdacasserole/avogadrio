@@ -27,20 +27,16 @@ $twig = new Twig_Environment($loader, array(
  * Rendering functions.
  */
 
-/**
- * @param string $color
- * @param string $smiles
- * @return \Intervention\Image\Image
- */
 function renderMolecule($color, $smiles) {
     // Proxy into Sourire for molecule render.
     $molecule = Image::make('http://localhost:8080/molecule/' . urlencode($smiles));
 
     // Colorize molecule.
     list($r, $g, $b) = sscanf($color, "%02x%02x%02x");
-    $n = 100 / 255;
-    $molecule->colorize($n * $r, $n * $g, $n * $b);
-    return $molecule;
+    $unit = 100 / 255;
+    $molecule->colorize($unit * $r, $unit * $g, $unit * $b);
+
+    return $molecule; // Return molecule image.
 }
 
 function renderScaledMolecule($canvasWidth, $canvasHeight, $color, $smiles) {
@@ -108,24 +104,22 @@ $app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($wi
 });
 
 $app->get('/api/smiles/{width}/{height}/{color}/{smiles}', function ($width, $height, $color, $smiles) use ($app, $twig, $config) {
-    return renderScaledMolecule($width, $height, $color, $smiles)->response();
+    echo renderScaledMolecule($width, $height, $color, $smiles)->response();
 });
 
-$app->get('/api/name/{width}/{height}/{fgcolor}/{name}', function ($width, $height, $fgcolor, $name) use ($app, $twig, $config) {
+$app->get('/api/name/{width}/{height}/{color}/{name}', function ($width, $height, $color, $name) use ($app, $twig, $config) {
     
     // Convert chemical name to SMILES if we can.
-        $smiles = nameToSmiles($config, $name);
-    
+    $smiles = nameToSmiles($config, $name);
+
+    // Forward  to SMILES route.
     if ($smiles !== null) {
-        
-        // Forward  to SMILES route.
-        $smilesRequest = Request::create("/api/smiles/$width/$height/$fgcolor/$smiles", 'GET');
+        $smilesRequest = Request::create("/api/smiles/$width/$height/$color/$smiles", 'GET');
         return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
-    } else {
-        
-        // Invalid chemical name.
-        $app->abort(404, "Chemical name could not be converted to SMILES.");
     }
+
+    // Invalid chemical name.
+    return $app->abort(404, "Chemical name could not be converted to SMILES.");
 });
 
 $app->run();
