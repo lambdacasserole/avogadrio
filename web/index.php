@@ -96,29 +96,25 @@ $app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($wi
     
     // Convert chemical name to SMILES if we can.
     $smiles = nameToSmiles($config, $name);
-    
+
+    // Forward  to SMILES route.
     if ($smiles !== null) {
-        
-        // Forward  to SMILES route.
         $smilesRequest = Request::create("/api/smiles/$width/$height/$bgcolor/$fgcolor/$smiles", 'GET');
         return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
-    } else {
-        
-        // Invalid chemical name.
-        $app->abort(404, "Chemical name could not be converted to SMILES.");
     }
+
+    // Invalid chemical name.
+    return $app->abort(404, "Chemical name could not be converted to SMILES.");
 });
 
-$app->get('/api/smiles/{width}/{height}/{fgcolor}/{smiles}', function ($width, $height, $fgcolor, $smiles) use ($app, $twig, $config) {
-    
-    
-    return renderScaledMolecule($width, $height, $fgcolor, $smiles)->response();
+$app->get('/api/smiles/{width}/{height}/{color}/{smiles}', function ($width, $height, $color, $smiles) use ($app, $twig, $config) {
+    return renderScaledMolecule($width, $height, $color, $smiles)->response();
 });
 
 $app->get('/api/name/{width}/{height}/{fgcolor}/{name}', function ($width, $height, $fgcolor, $name) use ($app, $twig, $config) {
     
     // Convert chemical name to SMILES if we can.
-        $smiles = nameToSmiles($name);
+        $smiles = nameToSmiles($config, $name);
     
     if ($smiles !== null) {
         
