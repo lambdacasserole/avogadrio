@@ -147,7 +147,55 @@ $app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($wi
         
         // Forward  to SMILES route.
         $smiles = $res->getBody();
-        $smilesRequest = Request::create("/api/smiles/$width/$height/$bgcolor/$fgcolor}/$smiles", 'GET');
+        $smilesRequest = Request::create("/api/smiles/$width/$height/$bgcolor/$fgcolor/$smiles", 'GET');
+        return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
+    } else {
+        
+        // Invalid chemical name.
+        $app->abort(404, "Chemical name could not be converted to SMILES.");
+    }
+});
+
+$app->get('/api/smiles/{width}/{height}/{fgcolor}/{smiles}', function ($width, $height, $fgcolor, $smiles) use ($app, $twig, $config) {
+    
+    // Proxy into Sourire for molecule render.
+    $molecule = Image::make('http://localhost:8080/molecule/' . urlencode($smiles));
+    
+    // Colorize molecule.
+    list($r, $g, $b) = sscanf($fgcolor, "%02x%02x%02x");
+    $n = 100 / 255;
+    $molecule->colorize($n * $r, $n * $g, $n * $b);
+    
+    // Shrink molecule to desired portion of background if needed.
+    $proportion = 0.6;
+    $px = $molecule->getWidth() / $width;
+    $py = $molecule->getHeight() / $height;
+    while ($px > $proportion || $py > $proportion) {
+        if ($px > $proportion) {
+            $factor = ($width * $proportion) / $molecule->getWidth();
+        } else {
+            $factor = ($height * $proportion) / $molecule->getHeight();
+        }
+        $molecule->resize($molecule->getWidth() * $factor, $molecule->getHeight() * $factor);
+        $px = $molecule->getWidth() / $width;
+        $py = $molecule->getHeight() / $height;
+    }
+    
+    // Send image out
+    echo $molecule->response()
+});
+
+$app->get('/api/name/{width}/{height}/{fgcolor}/{name}', function ($width, $height, $fgcolor, $name) use ($app, $twig, $config) {
+    
+    // Convert chemical name to SMILES if we can.
+    $client = new GuzzleHttp\Client(['verify' => false, 'exceptions'=>false]);
+    $res = $client->request('GET', str_replace('$name', $name, $config['chem_name_lookup_service']));
+    
+    if ($res->getStatusCode() == 200) {
+        
+        // Forward  to SMILES route.
+        $smiles = $res->getBody();
+        $smilesRequest = Request::create("/api/smiles/$width/$height/$fgcolor/$smiles", 'GET');
         return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
     } else {
         
