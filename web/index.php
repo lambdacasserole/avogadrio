@@ -182,7 +182,7 @@ $app->get('/api/smiles/{width}/{height}/{fgcolor}/{smiles}', function ($width, $
     }
     
     // Send image out
-    echo $molecule->response()
+    echo $molecule->response();
 });
 
 $app->get('/api/name/{width}/{height}/{fgcolor}/{name}', function ($width, $height, $fgcolor, $name) use ($app, $twig, $config) {
