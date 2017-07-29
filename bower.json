@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "bootstrap": "~3.3.1",
-    "bootswatch": "^3.3.6"
+    "bootswatch": "^3.3.6",
+    "spectrum": "~1.8.0"
   }
 }

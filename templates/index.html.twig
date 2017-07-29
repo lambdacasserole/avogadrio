@@ -1,114 +1,122 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://farbelous.github.io/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
-    <style type="text/css">
-        /* Sticky footer styles
--------------------------------------------------- */
-        html {
-            position: relative;
-            min-height: 100%;
-        }
-        body {
-            /* Margin bottom by footer height */
-            margin-bottom: 60px;
-        }
-        .footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            /* Set the fixed height of the footer here */
-            height: 156px;
-        }
-
-
-        /* Custom page CSS
-        -------------------------------------------------- */
-        /* Not required for template or sticky footer method. */
-
-        body > .container {
-            padding: 60px 15px 0;
-        }
-        .container .text-muted {
-            margin: 20px 0;
-        }
-
-        .footer > .container {
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        code {
-            font-size: 80%;
-        }
-
-        .sample-selector {
-            margin:0px;
-        }
-
-        .panel-picker {
-            margin:10px;
-        }
-    </style>
+    <link rel="stylesheet" href="https://designmodo.github.io/Flat-UI/dist/css/flat-ui.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://daneden.github.io/animate.css/animate.min.css">
+    <!-- <link rel="stylesheet" href="https://farbelous.github.io/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css"> -->
+    <link rel="stylesheet" href="css/main.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://farbelous.github.io/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
-    <script type="text/javascript">
-        var fgc = "000000";
-        var bgc = "ffffff";
-        var fgs = true;
-        function tog() {
-            fgs = !fgs;
-            if (fgs) {
-                $('.selector-bg').hide();
-                $('.selector-fg').show();
-            } else {
-                $('.selector-bg').show();
-                $('.selector-fg').hide();
-            }
-        }
-        function ref() {
-            $('.bb').attr('style', 'background:url(/api/name/1920/1080/' + fgc + '/caffeine);background-position:50% 50%;background-color:#' + bgc + ";background-repeat:no-repeat;");
-        }
-    </script>
-</head>
-<body class="bb">
-<footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-1">
-                <a onclick="tog()" href="#" class="btn btn-default"><i class="glyphicon glyphicon-adjust"></i></a>
-            </div>
-            <div class="col-md-2">
-                <div class="selector selector-fg"></div>
-                <div class="selector selector-bg"></div>
-            </div>
-            <div class="col-md-9">
+    <!-- <script type="text/javascript" src="https://farbelous.github.io/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script> -->
+    <script type="text/javascript" src="js/hamburger.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script src='bower_components/spectrum/spectrum.js'></script>
+<link rel='stylesheet' href='bower_components/spectrum/spectrum.css' />
+<style>
+.sp-container button {
+    background: #222;
+    padding: 10px;
+    text-shadow: none;
+    color: #fff;
+    margin-top: 5px;
+}
 
+.sp-container button:hover {
+    background: #444;
+}
+
+.sp-cancel {
+    display: none;
+}
+
+.sp-container {
+    background: #222;
+    border: 1px solid #333;
+    border-radius:5px;
+}
+
+.sp-picker-container {
+    border: 0;
+}
+
+.picker-label {
+    color: #c0c0c0;  
+    margin-bottom: 5px;
+}
+</style>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="overlay"></div>
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <img src="images/logo.svg" style="position:absolute;top:20px;left:20px;width:170px;height:auto">
+            <div style="position:absolute;top:125px;left:15px;width:100%;">
+            <div class="picker-label">Molecule</div>
+            <input type="text" class="picker picker-fg">
+            </div>
+            <div style="position:absolute;top:371px;left:15px;width:100%;">
+            <div class="picker-label">Background</div>
+            <input type="text" class="picker picker-bg">
+            </div>
+            <!-- <ul class="nav sidebar-nav"> -->
+                <!-- <li class="sidebar-brand"> -->
+                    <!-- <a href="#"> -->
+                       <!-- Bootstrap 3 -->
+                    <!-- </a> -->
+                <!-- </li> -->
+                <!-- <li> -->
+                    <!-- <a href="#"><i class="fa fa-fw fa-home"></i> Home</a> -->
+                <!-- </li> -->
+                <!-- <li> -->
+                    <!-- <a href="#"><i class="fa fa-fw fa-folder"></i> Page one</a> -->
+                <!-- </li> -->
+                <!-- <li> -->
+                    <!-- <a href="#"><i class="fa fa-fw fa-file-o"></i> Second page</a> -->
+                <!-- </li> -->
+                <!-- <li> -->
+                    <!-- <a href="#"><i class="fa fa-fw fa-cog"></i> Third page</a> -->
+                <!-- </li> -->
+                <!-- <li class="dropdown"> -->
+                  <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-plus"></i> Dropdown <span class="caret"></span></a> -->
+                  <!-- <ul class="dropdown-menu" role="menu"> -->
+                    <!-- <li class="dropdown-header">Dropdown heading</li> -->
+                    <!-- <li><a href="#">Action</a></li> -->
+                    <!-- <li><a href="#">Another action</a></li> -->
+                    <!-- <li><a href="#">Something else here</a></li> -->
+                    <!-- <li><a href="#">Separated link</a></li> -->
+                    <!-- <li><a href="#">One more separated link</a></li> -->
+                  <!-- </ul> -->
+                <!-- </li> -->
+                <!-- <li> -->
+                    <!-- <a href="#"><i class="fa fa-fw fa-bank"></i> Page four</a> -->
+                <!-- </li> -->
+                <!-- <li> -->
+                    <!-- <a href="#"><i class="fa fa-fw fa-dropbox"></i> Page 5</a> -->
+                <!-- </li> -->
+                <!-- <li> -->
+                    <!-- <a href="#"><i class="fa fa-fw fa-twitter"></i> Last page</a> -->
+                <!-- </li> -->
+            <!-- </ul> -->
+        </nav>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+          <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+            <span class="hamb-top"></span>
+            <span class="hamb-middle"></span>
+            <span class="hamb-bottom"></span>
+          </button>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</footer>
-<script>
-    $('.selector-fg').colorpicker({
-        color: fgc,
-        container: true,
-        inline: true
-    });
-    $('.selector-bg').colorpicker({
-        color: bgc,
-        container: true,
-        inline: true
-    });
-    $('.selector-fg').on('changeColor', function(e) {
-        fgc = e.color.toHex().substring(1);
-        ref();
-    })
-    $('.selector-bg').on('changeColor', function(e) {
-        bgc = e.color.toHex().substring(1);
-        ref();
-    })
-    $('.selector-bg').hide();
-</script>
 </body>
 </html>
