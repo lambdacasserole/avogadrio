@@ -11,8 +11,8 @@ $(document).ready ->
   invalidCompoundMessage = $ '.row-error'
 
   getCompoundName = ->
-    encodeURIComponent(compoundTextBox.val()).replace /\s/g, ''
-  window.getCompoundName = getCompoundName
+    encodeURIComponent compoundTextBox.val().replace(/\s/g, '')
+
   # URL builder functions for API.
   
   buildUrl = (width, height, foreground, background, name) ->
