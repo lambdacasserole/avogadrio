@@ -14,12 +14,9 @@ $(document).ready ->
       trigger.removeClass 'is-closed'
       trigger.addClass 'is-open'
       isClosed = true
-    return
 
   trigger.click ->
     hamburger_cross()
-    return
+    
   $('[data-toggle="offcanvas"]').click ->
     $('#wrapper').toggleClass 'toggled'
-    return
-  return
