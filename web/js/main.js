@@ -3,7 +3,7 @@ $(document).ready(function () {
     var backgroundColor = "000000";
         
     function buildUrl(width, height, foreground, background, name) {
-        return '/api/name/' + width + '/' + height + '/' + foreground + '/' + background + '/' + name;
+        return '/api/name/' + width + '/' + height + '/' + background + '/' + foreground + '/' + name;
     }
     
     function buildMoleculeOnlyUrl(width, height, foreground, name) {
@@ -13,18 +13,18 @@ $(document).ready(function () {
     function refreshPreview() {
         $('body')
             .css('background', 'url(' + buildMoleculeOnlyUrl(1920, 1280, foregroundColor, $('.comp-name').val()) + ')')
-            .css('background-color', '#' + bgc)
+            .css('background-color', '#' + backgroundColor)
             .css('background-position', '50% 50%')
             .css('background-repeat', 'no-repeat');
     }
         
     $('.picker-fg').on('change', function(e) {
-        fgc = $(e.target).val().substring(1);
+        foregroundColor = $(e.target).val().substring(1);
         refreshPreview();
     });
     
     $('.picker-bg').on('change', function(e) {
-        bgc = $(e.target).val().substring(1);
+        backgroundColor = $(e.target).val().substring(1);
         refreshPreview();
     });
     
@@ -33,33 +33,23 @@ $(document).ready(function () {
     });
     
     $('.download-btn').on('click', function(e) {
-        
+        window.open(buildUrl(1920, 1280, foregroundColor, backgroundColor, $('.comp-name').val()),'Image','width=largeImage.stylewidth,height=largeImage.style.height,resizable=1');
     });
 
-    $(".picker").spectrum({
-        // color: tinycolor,
-        // flat: true,
-        // showInput: true,
-        // showInitial: true,
-        // allowEmpty: bool,
+    $(".picker-fg").spectrum({
+        color: '#' + foregroundColor,
         showAlpha: false,
-        // disabled: bool,
-        // localStorageKey: string,
-        // showPalette: true,
-        // showPaletteOnly: true,
-        // togglePaletteOnly: bool,
-        // showSelectionPalette: bool,
         clickoutFiresChange: true,
-        // cancelText: string,
         chooseText: "Update",
-        // togglePaletteMoreText: string,
-        // togglePaletteLessText: string,
-        // containerClassName: string,
-        // replacerClassName: string,
         preferredFormat: 'hex',
-        // maxSelectionSize: int,
-        // palette: [[string]],
-        // selectionPalette: [string]
+    });
+    
+    $(".picker-bg").spectrum({
+        color: '#' + backgroundColor,
+        showAlpha: false,
+        clickoutFiresChange: true,
+        chooseText: "Update",
+        preferredFormat: 'hex',
     });
     
     refreshPreview();
