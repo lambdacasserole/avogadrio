@@ -1,122 +1,186 @@
 <html>
-<head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://designmodo.github.io/Flat-UI/dist/css/flat-ui.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://daneden.github.io/animate.css/animate.min.css">
-    <!-- <link rel="stylesheet" href="https://farbelous.github.io/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css"> -->
-    <link rel="stylesheet" href="css/main.css">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- <script type="text/javascript" src="https://farbelous.github.io/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script> -->
-    <script type="text/javascript" src="js/hamburger.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
-    <script src='bower_components/spectrum/spectrum.js'></script>
-<link rel='stylesheet' href='bower_components/spectrum/spectrum.css' />
-<style>
-.sp-container button {
-    background: #222;
-    padding: 10px;
-    text-shadow: none;
-    color: #fff;
-    margin-top: 5px;
-}
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="https://designmodo.github.io/Flat-UI/dist/css/flat-ui.min.css">
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="https://daneden.github.io/animate.css/animate.min.css">
+        <link rel="stylesheet" type="text/css" href="/bower_components/spectrum/spectrum.css">
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/bower_components/spectrum/spectrum.js"></script>
+        <script type="text/javascript" src="/js/hamburger.js"></script>
+        <script type="text/javascript" src="/js/main.js"></script>
+        <style>
+        body {
+        
+        background-position:50% 50%;background-repeat:no-repeat;
+        }
+        
+            .sp-container button {
+                background: #222;
+                padding: 10px;
+                text-shadow: none;
+                color: #fff;
+                margin-top: 5px;
+            }
 
-.sp-container button:hover {
-    background: #444;
-}
+            .sp-container button:hover {
+                background: #444;
+            }
 
-.sp-cancel {
-    display: none;
-}
+            .sp-cancel {
+                display: none;
+            }
 
-.sp-container {
-    background: #222;
-    border: 1px solid #333;
-    border-radius:5px;
-}
+            .sp-container {
+                background: #222;
+                border: 1px solid #333;
+                border-radius: 5px;
+            }
 
-.sp-picker-container {
-    border: 0;
-}
+            .sp-picker-container {
+                border: 0;
+            }
 
-.picker-label {
-    color: #c0c0c0;  
-    margin-bottom: 5px;
-}
-</style>
-</head>
-<body>
-    <div id="wrapper">
-        <div class="overlay"></div>
-        <!-- Sidebar -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
-            <img src="images/logo.svg" style="position:absolute;top:20px;left:20px;width:170px;height:auto">
-            <div style="position:absolute;top:125px;left:15px;width:100%;">
-            <div class="picker-label">Molecule</div>
-            <input type="text" class="picker picker-fg">
-            </div>
-            <div style="position:absolute;top:371px;left:15px;width:100%;">
-            <div class="picker-label">Background</div>
-            <input type="text" class="picker picker-bg">
-            </div>
-            <!-- <ul class="nav sidebar-nav"> -->
-                <!-- <li class="sidebar-brand"> -->
-                    <!-- <a href="#"> -->
-                       <!-- Bootstrap 3 -->
-                    <!-- </a> -->
-                <!-- </li> -->
-                <!-- <li> -->
-                    <!-- <a href="#"><i class="fa fa-fw fa-home"></i> Home</a> -->
-                <!-- </li> -->
-                <!-- <li> -->
-                    <!-- <a href="#"><i class="fa fa-fw fa-folder"></i> Page one</a> -->
-                <!-- </li> -->
-                <!-- <li> -->
-                    <!-- <a href="#"><i class="fa fa-fw fa-file-o"></i> Second page</a> -->
-                <!-- </li> -->
-                <!-- <li> -->
-                    <!-- <a href="#"><i class="fa fa-fw fa-cog"></i> Third page</a> -->
-                <!-- </li> -->
-                <!-- <li class="dropdown"> -->
-                  <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-plus"></i> Dropdown <span class="caret"></span></a> -->
-                  <!-- <ul class="dropdown-menu" role="menu"> -->
-                    <!-- <li class="dropdown-header">Dropdown heading</li> -->
-                    <!-- <li><a href="#">Action</a></li> -->
-                    <!-- <li><a href="#">Another action</a></li> -->
-                    <!-- <li><a href="#">Something else here</a></li> -->
-                    <!-- <li><a href="#">Separated link</a></li> -->
-                    <!-- <li><a href="#">One more separated link</a></li> -->
-                  <!-- </ul> -->
-                <!-- </li> -->
-                <!-- <li> -->
-                    <!-- <a href="#"><i class="fa fa-fw fa-bank"></i> Page four</a> -->
-                <!-- </li> -->
-                <!-- <li> -->
-                    <!-- <a href="#"><i class="fa fa-fw fa-dropbox"></i> Page 5</a> -->
-                <!-- </li> -->
-                <!-- <li> -->
-                    <!-- <a href="#"><i class="fa fa-fw fa-twitter"></i> Last page</a> -->
-                <!-- </li> -->
-            <!-- </ul> -->
-        </nav>
-        <!-- /#sidebar-wrapper -->
+            .sp-replacer {
+                background: #333;
+                border: 1px solid #444;
+                border-radius:5px;
+                color: #bbb;
+            }
 
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-          <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
-            <span class="hamb-top"></span>
-            <span class="hamb-middle"></span>
-            <span class="hamb-bottom"></span>
-          </button>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        
+            .sp-replacer:hover, .sp-replacer.sp-active {
+                border: 1px solid #ccc;
+                color: #bbb;
+                background: #444;
+            }
+
+            .section-lbl {
+                color: #ccc;
+                font-size: 14pt;
+            }
+
+            .picker-label {
+                color: #aaa;  
+                margin-bottom: 5px;
+            }
+
+            hr {
+                height: 1px;
+                border: 0;
+                background-color: #333;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+            
+            .logo {
+                margin: 20px;
+                width: 170px;
+                height: auto;
+            }
+            
+            .tool-section {
+                width: 100%;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            
+            .mtop-10 {
+                margin-top: 10px;
+            }
+            
+            .dark-tbox {
+                border: 1px solid #444;
+                padding: 5px;width:100%;
+                border-radius: 5px;
+                background: #222;
+                text-shadow: none;
+                color: #fff;
+            }
+            
+            button {
+                border: 1px solid #444;
+                border-radius: 5px;
+                background: #222;
+                text-shadow: none;
+                color: #fff;
+                padding: 5px 10px 5px 10px;
+            }
+            .download-btn {
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div class="overlay"></div>
+            <!-- Sidebar -->
+            <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+                <img src="images/logo.svg" class="logo">
+                <div class="tool-section">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="section-lbl">Molecule</div>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row mtop-10">
+                        <div class="col-xs-12">
+                            <input type="text" class="comp-name dark-tbox" value="caffeine">
+                        </div>
+                    </div>
+                    <div class="row mtop-10">
+                        <div class="col-xs-12 text-right">
+                            <button class="update-btn">Go!</button>
+                        </div>
                     </div>
                 </div>
+                <div class="tool-section mtop-10">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="section-lbl">Colours</div>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row mtop-10">
+                        <div class="col-xs-6">
+                            <div class="picker-label">Molecule:</div>
+                        </div>
+                        <div class="col-xs-6">
+                            <input type="text" class="picker picker-fg">
+                        </div>
+                    </div>
+                    <div class="row mtop-10">
+                        <div class="col-xs-6">
+                            <div class="picker-label">Background:</div>
+                        </div>
+                        <div class="col-xs-6">
+                            <input type="text" class="picker picker-bg">
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-section mtop-10">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="section-lbl">Download</div>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row mtop-10">
+                        <div class="col-xs-12">
+                            <button class="download-btn">Download!</button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div id="page-content-wrapper">
+                <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+                    <span class="hamb-top"></span>
+                    <span class="hamb-middle"></span>
+                    <span class="hamb-bottom"></span>
+                </button>
             </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>
