@@ -4,22 +4,35 @@ $(document).ready ->
 
   foregroundColor = 'ffffff'
   backgroundColor = '000000'
+  compoundName = 'caffeine'
 
   previewElement = $ 'body'
   compoundTextBox = $ '.comp-name'
-  
+  invalidCompoundMessage = $ '.row-error'
+
+  getCompoundName = ->
+    encodeURIComponent(compoundTextBox.val()).replace /\s/g, ''
+  window.getCompoundName = getCompoundName
   # URL builder functions for API.
   
   buildUrl = (width, height, foreground, background, name) ->
     "/api/name/#{width}/#{height}/#{background}/#{foreground}/#{name}"
-
+    
   buildMoleculeOnlyUrl = (width, height, foreground, name) ->
     "/api/name/#{width}/#{height}/#{foreground}/#{name}"
 
-  # Actions to take when we refresh the preview.
+  checkMoleculeName = (name, success, fail) ->
+    $.get "/api/name/exists/#{name}", (data) ->
+      if data then success() else fail()
     
+  # Actions to take when we refresh the preview.
+
+  failPreview = ->
+    invalidCompoundMessage.show()
+
   refreshPreview = ->
-    url = buildMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, compoundTextBox.val()
+    compoundName = getCompoundName()
+    url = buildMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, getCompoundName()
     previewElement.css 'background', "url(#{url})"
     previewElement.css 'background-color', "##{backgroundColor}"
     previewElement.css 'background-position', '50% 50%'
@@ -52,12 +65,13 @@ $(document).ready ->
   # Compound name update button should refresh the preview.
     
   $('.update-btn').on 'click', (e) ->
-    refreshPreview() 
+    invalidCompoundMessage.hide()
+    checkMoleculeName getCompoundName(), refreshPreview, failPreview
    
   # Download button should open rendered image for download.
    
   $('.download-btn').on 'click', (e) ->
-    url = buildUrl screenWidth, screenHeight, foregroundColor, backgroundColor, compoundTextBox.val()
+    url = buildUrl screenWidth, screenHeight, foregroundColor, backgroundColor, compoundName
     window.open url
     
   refreshPreview() # Initial update.
