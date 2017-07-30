@@ -63,5 +63,5 @@ phpunit.phar
 /config/config.yaml
 
 # Compiled code
-/web/js/blog.js
+/web/js/
 /web/css/
