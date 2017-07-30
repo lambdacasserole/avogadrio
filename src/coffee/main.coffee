@@ -1,6 +1,6 @@
 $(document).ready ->
-  screenWidth = 1920
-  screenHeight = 1280
+  screenWidth = window.screen.availWidth
+  screenHeight = window.screen.availHeight
 
   foregroundColor = 'ffffff'
   backgroundColor = '000000'
