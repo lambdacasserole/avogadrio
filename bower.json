@@ -1,16 +1,15 @@
 {
-  "name": "lambdacasserole/silex-base",
+  "name": "lambdacasserole/avogadrio",
   "version": "1.0.0",
-  "homepage": "https://github.com/lambdacasserole/silex-base",
+  "homepage": "https://github.com/lambdacasserole/avogadrio",
   "authors": [
     "Saul Johnson <saul.a.johnson@gmail.com>"
   ],
-  "description": "Basic Silex project for a simple website.",
+  "description": "Worship your favorite molecule by setting it as your wallpaper.",
   "keywords": [
-    "basic",
-    "silex",
-    "simple",
-    "website"
+    "molecule",
+    "wallpaper",
+    "chemical"
   ],
   "license": "MIT",
   "dependencies": {
