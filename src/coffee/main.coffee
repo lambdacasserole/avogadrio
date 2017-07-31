@@ -41,7 +41,6 @@ $(document).ready ->
     invalidCompoundMessage.show()
 
   resetBackground = (url) ->
-    alert url
     previewElement.css 'background', "url('#{url}')"
     previewElement.css 'background-color', "##{backgroundColor}"
     previewElement.css 'background-position', '50% 50%'
