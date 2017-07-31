@@ -97,7 +97,11 @@ $app->get('/api/smiles/{width}/{height}/{bgcolor}/{fgcolor}/{smiles}', function 
     $img->insert($molecule, 'center');
     
     // Send image out
-    echo $img->response();
+    return new \Symfony\Component\HttpFoundation\Response(
+        $img->response('png'),
+        200,
+        ['Content-Type' => 'image/png']
+    );
 });
 
 $app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($width, $height, $bgcolor, $fgcolor, $name) use ($app, $twig, $config) {
@@ -116,7 +120,11 @@ $app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($wi
 });
 
 $app->get('/api/smiles/{width}/{height}/{color}/{smiles}', function ($width, $height, $color, $smiles) use ($app, $twig, $config) {
-    echo renderScaledMolecule($width, $height, $color, $smiles)->response();
+    return new \Symfony\Component\HttpFoundation\Response(
+        renderScaledMolecule($width, $height, $color, $smiles)->response('png'),
+        200,
+        ['Content-Type' => 'image/png']
+    );
 });
 
 $app->get('/api/name/exists/{name}', function ($name) use ($config) {

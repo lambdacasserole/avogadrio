@@ -8,10 +8,14 @@ $(document).ready ->
 
   previewElement = $ 'body'
   compoundTextBox = $ '.comp-name'
+  smilesTextBox = $ '.comp-smiles'
   invalidCompoundMessage = $ '.row-error'
 
   getCompoundName = ->
     encodeURIComponent compoundTextBox.val().replace(/\s/g, '')
+
+  getCompoundSmiles = ->
+    encodeURIComponent smilesTextBox.val()
 
   # URL builder functions for API.
   
@@ -21,23 +25,36 @@ $(document).ready ->
   buildMoleculeOnlyUrl = (width, height, foreground, name) ->
     "/api/name/#{width}/#{height}/#{foreground}/#{name}"
 
+  buildSmilesMoleculeOnlyUrl = (width, height, foreground, name) ->
+    "/api/smiles/#{width}/#{height}/#{foreground}/#{name}"
+
   checkMoleculeName = (name, success, fail) ->
     $.get "/api/name/exists/#{name}", (data) ->
       if data then success() else fail()
-    
+
+  checkSmiles = (smiles, success, fail) ->
+    success()
+
   # Actions to take when we refresh the preview.
 
   failPreview = ->
     invalidCompoundMessage.show()
 
-  refreshPreview = ->
-    compoundName = getCompoundName()
-    url = buildMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, getCompoundName()
-    previewElement.css 'background', "url(#{url})"
+  resetBackground = (url) ->
+    alert url
+    previewElement.css 'background', "url('#{url}')"
     previewElement.css 'background-color', "##{backgroundColor}"
     previewElement.css 'background-position', '50% 50%'
     previewElement.css 'background-repeat', 'no-repeat'
-    
+
+  refreshPreview = ->
+    url = buildMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, getCompoundName()
+    resetBackground(url)
+
+  refreshSmilesPreview = ->
+    url = buildSmilesMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, getCompoundSmiles()
+    resetBackground(url)
+
   # Let's initialize the color pickers.
     
   $('.picker-fg').spectrum
@@ -67,6 +84,10 @@ $(document).ready ->
   $('.update-btn').on 'click', (e) ->
     invalidCompoundMessage.hide()
     checkMoleculeName getCompoundName(), refreshPreview, failPreview
+
+  $('.update-smiles-btn').on 'click', (e) ->
+    # invalidCompoundMessage.hide()
+    checkSmiles getCompoundSmiles(), refreshSmilesPreview, failPreview
    
   # Download button should open rendered image for download.
    
