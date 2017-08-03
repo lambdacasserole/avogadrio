@@ -9,7 +9,10 @@ $(document).ready ->
   previewElement = $ 'body'
   compoundTextBox = $ '.comp-name'
   smilesTextBox = $ '.comp-smiles'
-  invalidCompoundMessage = $ '.row-error'
+
+  errorRows = $ '.row-error'
+  invalidCompoundMessage = $ '.row-error-compound'
+  invalidSmilesMessage = $ '.row-error-smiles'
 
   getCompoundName = ->
     encodeURIComponent compoundTextBox.val().replace(/\s/g, '')
@@ -33,12 +36,16 @@ $(document).ready ->
       if data then success() else fail()
 
   checkSmiles = (smiles, success, fail) ->
-    success()
+    regex = new RegExp "OC[C@@H](O1)[C@@H](O)[C@H](O)[C@@H]2[C@@H]1c3c(O)c(OC)c(O)cc3C(=O)O2"
+    if regex.test smiles then success() else fail()
 
   # Actions to take when we refresh the preview.
 
   failPreview = ->
     invalidCompoundMessage.show()
+
+  failPreviewSmiles = ->
+    invalidSmilesMessage.show()
 
   resetBackground = (url) ->
     previewElement.css 'background', "url('#{url}')"
@@ -81,12 +88,12 @@ $(document).ready ->
   # Compound name update button should refresh the preview.
     
   $('.update-btn').on 'click', (e) ->
-    invalidCompoundMessage.hide()
+    errorRows.hide()
     checkMoleculeName getCompoundName(), refreshPreview, failPreview
 
   $('.update-smiles-btn').on 'click', (e) ->
-    # invalidCompoundMessage.hide()
-    checkSmiles getCompoundSmiles(), refreshSmilesPreview, failPreview
+    errorRows.hide()
+    checkSmiles getCompoundSmiles(), refreshSmilesPreview, failPreviewSmiles
    
   # Download button should open rendered image for download.
    
