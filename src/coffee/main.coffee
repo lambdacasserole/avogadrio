@@ -36,7 +36,7 @@ $(document).ready ->
       if data then success() else fail()
 
   checkSmiles = (smiles, success, fail) ->
-    regex = new RegExp "OC[C@@H](O1)[C@@H](O)[C@H](O)[C@@H]2[C@@H]1c3c(O)c(OC)c(O)cc3C(=O)O2"
+    regex = /^([^J][a-z0-9@+\-\[\]\(\)\\\/%=#$]{6,})$/ig
     if regex.test smiles then success() else fail()
 
   # Actions to take when we refresh the preview.
