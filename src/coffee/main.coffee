@@ -82,11 +82,11 @@ $(document).ready ->
     
   $('.picker-fg').on 'change', (e) ->
     foregroundColor = $(e.target).val().substring(1)
-    if smilesMode then refreshPreviewSmiles() else refreshPreview()
+    if smilesMode then refreshSmilesPreview() else refreshPreview()
     
   $('.picker-bg').on 'change', (e) ->
     backgroundColor = $(e.target).val().substring(1)
-    if smilesMode then refreshPreviewSmiles() else refreshPreview()
+    if smilesMode then refreshSmilesPreview() else refreshPreview()
     
   # Compound name update button should refresh the preview.
     
