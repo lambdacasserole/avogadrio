@@ -6,7 +6,8 @@ $(document).ready ->
 
   foregroundColor = 'ce3838'
   backgroundColor = '5f0000'
-  compoundName = 'caffeine'
+  compoundName = ''
+  structure = 'CCN(CC)C1=CC2=C(C=C1)N=C3C4=CC=CC=C4C(=O)C=C3O2'
 
   previewElement = $ 'body'
   compoundTextBox = $ '.comp-name'
@@ -29,6 +30,9 @@ $(document).ready ->
     
   buildMoleculeOnlyUrl = (width, height, foreground, name) ->
     "/api/name/#{width}/#{height}/#{foreground}/#{name}"
+
+  buildSmilesUrl = (width, height, foreground, background, name) ->
+    "/api/smiles/#{width}/#{height}/#{background}/#{foreground}/#{name}"
 
   buildSmilesMoleculeOnlyUrl = (width, height, foreground, name) ->
     "/api/smiles/#{width}/#{height}/#{foreground}/#{name}"
@@ -58,10 +62,12 @@ $(document).ready ->
 
   refreshPreview = ->
     url = buildMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, getCompoundName()
+    compoundName = getCompoundName()
     resetBackground(url)
 
   refreshSmilesPreview = ->
     url = buildSmilesMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, getCompoundSmiles()
+    structure = getCompoundSmiles()
     resetBackground(url)
 
   # Let's initialize the color pickers.
@@ -104,6 +110,8 @@ $(document).ready ->
    
   $('.download-btn').on 'click', (e) ->
     url = buildUrl screenWidth, screenHeight, foregroundColor, backgroundColor, compoundName
+    if smilesMode
+      url = buildSmilesUrl screenWidth, screenHeight, foregroundColor, backgroundColor, structure
     window.open url
 
   refreshSmilesPreview() # Initial update.
