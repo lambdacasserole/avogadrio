@@ -48,6 +48,7 @@ $(document).ready ->
     invalidSmilesMessage.show()
 
   resetBackground = (url) ->
+    $('html').css 'background-color', "##{backgroundColor}"
     previewElement.css 'background', "url('#{url}')"
     previewElement.css 'background-color', "##{backgroundColor}"
     previewElement.css 'background-position', '50% 50%'
