@@ -283,15 +283,25 @@ html {
 /*       Hamburger-Cross         */
 /*-------------------------------*/
 
-.hamburger {
+.hamburger-wrapper {
   background: rgba(0, 0, 0, 0.2);
-  border: 1px solid #fff;
+  border: 1px solid #111;
   border-radius: 5px;
   display: block;
-  height: 32px;
-  margin-left: 15px;
+  height: 48px;
+  width: 48px;
   position: absolute;
   top: 20px;
+  margin-left: 15px;
+}
+
+.hamburger {
+  background: transparent;
+  display: block;
+  height: 32px;
+  position: absolute;
+  top: 8px;
+  left: 8px;
   width: 32px;
   z-index: 999;
   &:hover {
