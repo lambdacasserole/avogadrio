@@ -4,8 +4,8 @@ $(document).ready ->
 
   smilesMode = true
 
-  foregroundColor = '5f0000'
-  backgroundColor = 'ba5353'
+  foregroundColor = 'ba5353'
+  backgroundColor = '5f0000'
   compoundName = 'caffeine'
 
   previewElement = $ 'body'
