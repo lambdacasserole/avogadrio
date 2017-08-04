@@ -102,4 +102,4 @@ $(document).ready ->
     url = buildUrl screenWidth, screenHeight, foregroundColor, backgroundColor, compoundName
     window.open url
     
-  refreshPreview() # Initial update.
+  refreshSmilesPreview() # Initial update.
