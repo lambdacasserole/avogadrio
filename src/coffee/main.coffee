@@ -2,6 +2,8 @@ $(document).ready ->
   screenWidth = window.screen.availWidth
   screenHeight = window.screen.availHeight
 
+  smilesMode = true
+
   foregroundColor = 'ffffff'
   backgroundColor = '000000'
   compoundName = 'caffeine'
@@ -80,19 +82,21 @@ $(document).ready ->
     
   $('.picker-fg').on 'change', (e) ->
     foregroundColor = $(e.target).val().substring(1)
-    refreshPreview()
+    if smilesMode then refreshPreviewSmiles() else refreshPreview()
     
   $('.picker-bg').on 'change', (e) ->
     backgroundColor = $(e.target).val().substring(1)
-    refreshPreview()
+    if smilesMode then refreshPreviewSmiles() else refreshPreview()
     
   # Compound name update button should refresh the preview.
     
   $('.update-btn').on 'click', (e) ->
+    smilesMode = false
     errorRows.hide()
     checkMoleculeName getCompoundName(), refreshPreview, failPreview
 
   $('.update-smiles-btn').on 'click', (e) ->
+    smilesMode = true
     errorRows.hide()
     checkSmiles getCompoundSmiles(), refreshSmilesPreview, failPreviewSmiles
    
@@ -101,5 +105,5 @@ $(document).ready ->
   $('.download-btn').on 'click', (e) ->
     url = buildUrl screenWidth, screenHeight, foregroundColor, backgroundColor, compoundName
     window.open url
-    
+
   refreshSmilesPreview() # Initial update.
