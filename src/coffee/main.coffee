@@ -4,7 +4,7 @@ $(document).ready ->
 
   smilesMode = true
 
-  foregroundColor = 'ba5353'
+  foregroundColor = 'ce3838'
   backgroundColor = '5f0000'
   compoundName = 'caffeine'
 
