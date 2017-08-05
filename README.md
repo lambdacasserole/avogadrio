@@ -1,9 +1,5 @@
-# Silex Base Template
-Basic Silex project for a simple website.
-
-I'm presenting here a clean (-ish) starting point for a website written in PHP on Silex. This is a direct port of [my Django base project](https://github.com/lambdacasserole/django-base/).
-
-![Screenshot](screenshot_small.png)
+# Avogadrio
+Worship your favorite molecule by setting it as your wallpaper.
 
 ## Prerequisites
 You'll need to have a web server installed and configured with PHP for this to work. I really recommend [XAMPP](https://www.apachefriends.org/), especially for Windows users. Once you've done that you can proceed.
@@ -13,8 +9,9 @@ You'll also need [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.c
 ## Configuration
 A couple of files need changing to get the site working for you.
 
-1. Copy `config.yaml.dist` and rename it to `config.yaml`. Fill in the fields according to their descriptions and save.
-2. Locate `blog.coffee` and fill in the `blogId` and `apiKey` fields to get your blog working.
+1. Copy `config/config.yaml.dist` and rename it to `config.yaml`. Fill in the fields according to their descriptions and save.
+2. For `chem_name_lookup_service` I recommend setting it to `https://cactus.nci.nih.gov/chemical/structure/$name/smiles`.
+3. For `sourire_service` you'll want to point it to your local [Sourire](https://github.com/tmoerman/sourire) server. For example `http://localhost:8080/molecule/$smiles`.
 
 ## Building
 Clone the project down and open the folder in your favourite editor. It's a JetBrains PhpStorm project but you can use whichever paid/free software takes your fancy.
@@ -50,7 +47,3 @@ gulp
 ```
 
 This command will need running again every time you make a change to a Less or CoffeeScript file. If you're working on them, run `gulp watch` in a terminal to watch for file changes and compile accordingly.
-
-## Limitations
-
-I'm not a web designer. The site isn't going to bring a tear to your eye with its beauty.
