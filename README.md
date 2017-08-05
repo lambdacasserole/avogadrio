@@ -2,7 +2,9 @@
 Worship your favorite molecule by setting it as your wallpaper.
 
 Avogadrio is a web app that will render your favourite molecule as a desktop wallpaper from either a compund name or
-[SMILES structure](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system).
+[SMILES structure](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system). Molecule rendering
+is designed to be powered by [Sourire](https://github.com/tmoerman/sourire) which itself wraps the
+[Indigo cheminformatics library](https://github.com/ggasoftware/indigo).
 
 ![Screenshot](screenshot_small.png)
 
