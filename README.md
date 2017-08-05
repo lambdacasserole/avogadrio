@@ -60,6 +60,6 @@ This command will need running again every time you make a change to a Less or C
 ## Acknowledgements
 A big thank you to:
 
-* [Nile Red](https://www.youtube.com/user/TheRedNile) inspired me to build this. I wasn't big on Chemistry until I came across his videos.
+* [Nile Red](https://www.youtube.com/user/TheRedNile) inspired me to build this. I wasn't that big on chemistry until I came across his videos.
 * [Jay Holtslander](https://codepen.io/j_holtslander/) put together the hamburger menu/sidebar combo in his [Pen](https://codepen.io/j_holtslander/pen/XmpMEp) on CodePen. I believe it's derived from earlier work by [maridlcrmn](https://bootsnipp.com/maridlcrmn).
 * [Thomas Moerman](https://github.com/tmoerman) created [Sourire](https://github.com/tmoerman/sourire), which really simplified the molecule rendering process.
