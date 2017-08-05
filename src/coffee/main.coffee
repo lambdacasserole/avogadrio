@@ -17,7 +17,7 @@ $(document).ready ->
   smilesTextBox = $ '.comp-smiles'
 
   # Element to use for wallpaper preview.
-  previewElement = $ 'html'
+  previewElement = $ 'body'
 
   # Error message elements.
   errorRows = $ '.row-error'
@@ -128,7 +128,7 @@ $(document).ready ->
     currentCompoundName = getCompoundName()
     smilesMode = false
     url = buildMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, currentCompoundName
-    updatePreview previewElement, backgroundColor, url
+    updatePreview previewElement, url, backgroundColor
 
   # Refreshes the preview using the SMILES structure text box.
   #
@@ -136,7 +136,7 @@ $(document).ready ->
     currentCompoundSmiles = getCompoundSmiles()
     smilesMode = true
     url = buildSmilesMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, currentCompoundSmiles
-    updatePreview previewElement, backgroundColor, url
+    updatePreview previewElement, url, backgroundColor
 
   # Let's initialize the color pickers.
     
