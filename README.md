@@ -4,7 +4,8 @@ Worship your favorite molecule by setting it as your wallpaper.
 Avogadrio is a web app that will render your favourite molecule as a desktop wallpaper from either a compund name or
 [SMILES structure](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system). Molecule rendering
 is designed to be powered by [Sourire](https://github.com/tmoerman/sourire) which itself wraps the
-[Indigo cheminformatics toolkit](https://github.com/ggasoftware/indigo).
+[Indigo cheminformatics toolkit](https://github.com/ggasoftware/indigo). Built on the 
+[Silex](https://github.com/silexphp/Silex) micro-framework.
 
 ![Screenshot](screenshot_small.png)
 
@@ -57,5 +58,8 @@ gulp
 This command will need running again every time you make a change to a Less or CoffeeScript file. If you're working on them, run `gulp watch` in a terminal to watch for file changes and compile accordingly.
 
 ## Acknowledgements
+A big thank you to:
 
-[Jay Holtslander](https://codepen.io/j_holtslander/) put together the hamburger menu/sidebar combo in his [Pen](https://codepen.io/j_holtslander/pen/XmpMEp) on CodePen. I believe it's derived from earlier work by [maridlcrmn](https://bootsnipp.com/maridlcrmn).
+* [Nile Red](https://www.youtube.com/user/TheRedNile) inspired me to build this. I wasn't big on Chemistry until I came across his videos.
+* [Jay Holtslander](https://codepen.io/j_holtslander/) put together the hamburger menu/sidebar combo in his [Pen](https://codepen.io/j_holtslander/pen/XmpMEp) on CodePen. I believe it's derived from earlier work by [maridlcrmn](https://bootsnipp.com/maridlcrmn).
+* [Thomas Moerman](https://github.com/tmoerman) created [Sourire](https://github.com/tmoerman/sourire), which really simplified the molecule rendering process.
