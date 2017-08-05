@@ -1,6 +1,8 @@
 # Avogadrio
 Worship your favorite molecule by setting it as your wallpaper.
 
+![Screenshot](screenshot_small.png)
+
 ## Prerequisites
 You'll need to have a web server installed and configured with PHP for this to work. I really recommend [XAMPP](https://www.apachefriends.org/), especially for Windows users. Once you've done that you can proceed.
 
