@@ -17,7 +17,7 @@ $(document).ready ->
   smilesTextBox = $ '.comp-smiles'
 
   # Element to use for wallpaper preview.
-  previewElement = $ 'body'
+  previewElement = $ 'body, html'
 
   # Error message elements.
   errorRows = $ '.row-error'
