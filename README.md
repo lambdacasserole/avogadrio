@@ -19,6 +19,7 @@ A couple of files need changing to get the site working for you.
 1. Copy `config/config.yaml.dist` and rename it to `config.yaml`. Fill in the fields according to their descriptions and save.
 2. For `chem_name_lookup_service` I recommend setting it to `https://cactus.nci.nih.gov/chemical/structure/$name/smiles`.
 3. For `sourire_service` you'll want to point it to your local [Sourire](https://github.com/tmoerman/sourire) server. For example `http://localhost:8080/molecule/$smiles`.
+4. Create a file at `templates/_analytics.txt` for your analytics code. Leave it blank if you like, but you must create it.
 
 ## Building
 Clone the project down and open the folder in your favourite editor. It's a JetBrains PhpStorm project but you can use whichever paid/free software takes your fancy.
@@ -54,3 +55,7 @@ gulp
 ```
 
 This command will need running again every time you make a change to a Less or CoffeeScript file. If you're working on them, run `gulp watch` in a terminal to watch for file changes and compile accordingly.
+
+## Acknowledgements
+
+[Jay Holtslander](https://codepen.io/j_holtslander/) put together the hamburger menu/sidebar combo in his [Pen](https://codepen.io/j_holtslander/pen/XmpMEp) on CodePen. I believe it's derived from earlier work by [maridlcrmn](https://bootsnipp.com/maridlcrmn).
