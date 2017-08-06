@@ -66,3 +66,9 @@ phpunit.phar
 # Compiled code
 /web/js/
 /web/css/
+
+# Caches
+/db/*.dat
+
+# Keep files
+!.gitkeep
