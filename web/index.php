@@ -47,7 +47,7 @@ $app->get('/api/smiles/{width}/{height}/{background}/{foreground}/{smiles}',
     function ($width, $height, $background, $foreground, $smiles) use ($moleculeRenderer) {
 
         // Render molecule with background.
-        $image = $moleculeRenderer->renderMoleculeWithBackground($foreground, $background, $smiles, $width, $height);
+        $image = $moleculeRenderer->renderMoleculeWithBackground($smiles, $foreground, $background, $width, $height);
 
         // Return image to client.
         return new Response($image->response('png'), 200, ['Content-Type' => 'image/png']);
@@ -60,7 +60,7 @@ $app->get('/api/smiles/{width}/{height}/{color}/{smiles}',
     function ($width, $height, $color, $smiles) use ($moleculeRenderer) {
 
         // Render molecule only.
-        $image = $moleculeRenderer->renderScaledMolecule($width, $height, $color, $smiles);
+        $image = $moleculeRenderer->renderScaledMolecule($smiles, $color, $width, $height);
 
         // Return image to client.
         return new Response($image->response('png'), 200, ['Content-Type' => 'image/png']);
@@ -107,8 +107,11 @@ $app->get('/api/name/{width}/{height}/{color}/{name}',
 /**
  * Action for checking if compound name exists.
  */
-$app->get('/api/name/exists/{name}', function ($name) use ($config, $smilesConverter) {
-    return new JsonResponse($smilesConverter->nameToSmiles($name) === null ? false : true);
+$app->get('/api/name/exists/{name}',
+    function ($name) use ($config, $smilesConverter) {
+
+        // Return JSON response (just a lone boolean).
+        return new JsonResponse($smilesConverter->nameToSmiles($name) === null ? false : true);
 });
 
 $app->run();

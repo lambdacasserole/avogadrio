@@ -5,7 +5,7 @@ namespace Avogadrio;
 use Intervention\Image\ImageManagerStatic as Image;
 
 /**
- *
+ * Provides a molecule rendering service via a Sourire installation.
  *
  * @author Saul Johnson <saul.a.johnson@gmail.com>
  * @since 06/08/2017
@@ -15,51 +15,94 @@ class MoleculeRenderer
 {
     private $sourireUrl;
 
+    /**
+     * Initializes a new instance of a molecule rendering service.
+     *
+     * @param string $sourireUrl    the URL of the running Sourire server to use
+     */
     public function __construct($sourireUrl)
     {
+        // Add missing forward slash if needed.
         $this->sourireUrl = $sourireUrl;
+        if ($this->sourireUrl[strlen($this->sourireUrl) - 1] != '/') {
+            $this->sourireUrl .= '/';
+        }
 
         // Configure GD as image driver.
         Image::configure(array('driver' => 'gd'));
     }
 
-    public function renderMolecule($color, $smiles)
+    /**
+     * Renders a molecule.
+     *
+     * @param string $smiles    the SMILES structure of the molecule to render
+     * @param string $color     the color to render the molecule in (as a hex string without `#`)
+     * @return \Intervention\Image\Image
+     */
+    public function renderMolecule($smiles, $color)
     {
         // Proxy into Sourire for molecule render.
-        $molecule = Image::make($this->sourireUrl . urlencode($smiles));
+        $img = Image::make($this->sourireUrl . urlencode($smiles));
 
         // Colorize molecule.
         list($r, $g, $b) = sscanf($color, "%02x%02x%02x");
         $unit = 100 / 255;
-        $molecule->colorize($unit * $r, $unit * $g, $unit * $b);
+        $img->colorize($unit * $r, $unit * $g, $unit * $b);
 
-        return $molecule; // Return molecule image.
+        return $img; // Return molecule image.
     }
 
-    public function renderScaledMolecule($color, $smiles, $canvasWidth, $canvasHeight, $proportion = 0.6)
+    /**
+     * Renders a molecule, scaled to a canvas size using a maximum proportion.
+     *
+     * @param string $smiles    the SMILES structure of the molecule to render
+     * @param string $color     the color to render the molecule in (as a hex string without `#`)
+     * @param int $canvasWidth  the width of the canvas to scale the molecule to
+     * @param int $canvasHeight the height of the canvas to scale the molecule to
+     * @param float $proportion the maximum proportion of the canvas the molecule should occupy (in either direction)
+     * @return \Intervention\Image\Image
+     */
+    public function renderScaledMolecule($smiles, $color, $canvasWidth, $canvasHeight, $proportion = 0.8)
     {
-        $molecule = $this->renderMolecule($color, $smiles);
-        $px = $molecule->getWidth() / $canvasWidth;
-        $py = $molecule->getHeight() / $canvasHeight;
+        // Render molecule at normal size.
+        $img = $this->renderMolecule($smiles, $color);
+
+        // Calculate proportions of canvas width.
+        $px = $img->getWidth() / $canvasWidth;
+        $py = $img->getHeight() / $canvasHeight;
+
+        // Resize in both directions to fit.
         while ($px > $proportion || $py > $proportion) {
             if ($px > $proportion) {
-                $factor = ($canvasWidth * $proportion) / $molecule->getWidth();
+                $factor = ($canvasWidth * $proportion) / $img->getWidth();
             } else {
-                $factor = ($canvasHeight * $proportion) / $molecule->getHeight();
+                $factor = ($canvasHeight * $proportion) / $img->getHeight();
             }
-            $molecule->resize($molecule->getWidth() * $factor, $molecule->getHeight() * $factor);
-            $px = $molecule->getWidth() / $canvasWidth;
-            $py = $molecule->getHeight() / $canvasHeight;
+            $img->resize($img->getWidth() * $factor, $img->getHeight() * $factor);
+            $px = $img->getWidth() / $canvasWidth;
+            $py = $img->getHeight() / $canvasHeight;
         }
-        return $molecule;
+
+        return $img;
     }
 
-    public function renderMoleculeWithBackground($fgcolor, $bgcolor, $smiles, $width, $height) {
+    /**
+     * Renders a molecule, scaled to a canvas size using a maximum proportion.
+     *
+     * @param string $smiles the SMILES structure of the molecule to render
+     * @param string $foreground the color to render the molecule in (as a hex string without `#`)
+     * @param string $background the color to render the background in (as a hex string without `#`)
+     * @param int $width the width of the image to render
+     * @param int $height the height of the image to render
+     * @return \Intervention\Image\Image
+     */
+    public function renderMoleculeWithBackground($smiles, $foreground, $background, $width, $height)
+    {
         // Set up background.
-        $img = Image::canvas($width, $height, "#$bgcolor");
+        $img = Image::canvas($width, $height, "#$background");
 
-        // Render molecule.
-        $molecule = $this->renderScaledMolecule($fgcolor, $smiles, $width, $height);
+        // Render scaled molecule.
+        $molecule = $this->renderScaledMolecule($smiles, $foreground, $width, $height);
 
         // Center on background.
         $img->insert($molecule, 'center');
