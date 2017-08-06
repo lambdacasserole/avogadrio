@@ -15,77 +15,20 @@
 //
 // Modified by Saul Johnson (@lambdacasserole).
 
+@import "variables.less";
+
 /*-------------------------------*/
-/*           VARIABLES           */
+/*           Elements            */
 /*-------------------------------*/
-
-// BACKGROUND COLOR
-@bg-color: #000;
-
-// TEXT COLOR
-@text-color: #fff;
-
-// SIDEBAR LINK COLOR VARIABLES
-@side-color-1: #1a1a1a;
-@side-color-2: darken(@side-color-3, 5%);
-@side-color-3: darken(@side-color-4, 5%);
-@side-color-4: @bg-color;
-@side-color-5: lighten(@side-color-4, 5%);
-@side-color-6: lighten(@side-color-5, 5%);
-@side-color-7: lighten(@side-color-6, 5%);
-@side-color-8: lighten(@side-color-7, 5%);
-@side-color-9: lighten(@side-color-8, 5%);
-
-// HAMBURGER COLOR
-@hamburger-color-closed: fadeout(@text-color, 30);
-@hamburger-color-open: @text-color;
-
-// WIDTH VARIABLES
-@width1: 220px;
-@width2: 100px;
-@full-width: 100%;
-
-// HEIGHT VARIABLES
-@full-height: 100%;
 
 body {
-    position: relative;
-    overflow-x: hidden;
+  overflow: hidden;
 }
 
-html {
+body, html {
   background-color: @bg-color;
+  overflow: hidden;
 }
-
-
-
-
-
-
-
-.nav {
-  .open>a {
-    background-color: transparent;
-    &:hover {
-      background-color: transparent;
-    }
-    &:focus {
-      background-color: transparent;
-    }
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*-------------------------------*/
 /*           Wrappers            */
@@ -98,24 +41,26 @@ html {
   padding-left: 0;
   transition: all 0.5s ease;
 }
+
 #wrapper.toggled {
-  padding-left: 220px;
+  padding-left: @sidebar-width;
   #sidebar-wrapper {
-    width: @width1;
+    width: @sidebar-width;
   }
   #page-content-wrapper {
-    margin-right: -220px;
+    margin-right: -(@sidebar-width);
     position: absolute;
   }
 }
+
 #sidebar-wrapper {
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
   -webkit-transition: all 0.5s ease;
-  background: #1a1a1a;
+  background: @sidebar-background;
   height: @full-height;
-  left: 220px;
-  margin-left: -220px;
+  left: @sidebar-width;
+  margin-left: -(@sidebar-width);
   overflow-x: hidden;
   overflow-y: auto;
   transition: all 0.5s ease;
@@ -125,175 +70,11 @@ html {
     display: none;
   }
 }
+
 #page-content-wrapper {
   padding-top: 70px;
   width: @full-width;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*-------------------------------*/
-/*     Sidebar nav styles        */
-/*-------------------------------*/
-
-.sidebar-nav {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  top: 0;
-  width: @width1;
-  li {
-    display: inline-block;
-    line-height: 20px;
-    position: relative;
-    width: @full-width;
-    &:before {
-      background-color: #1c1c1c;
-      content: '';
-      height: @full-height;
-      left: 0;
-      position: absolute;
-      top: 0;
-      transition: width .2s ease-in;
-      width: 3px;
-      z-index: -1;
-    }
-    &:first-child {
-      a {
-        background-color: @side-color-1;
-        color: #ffffff;
-      }
-    }
-    &:nth-child(2) {
-      &:before {
-        background-color: @side-color-2;
-      }
-    }
-    &:nth-child(3) {
-      &:before {
-        background-color: @side-color-3;
-      }
-    }
-    &:nth-child(4) {
-      &:before {
-        background-color: @side-color-4;
-      }
-    }
-    &:nth-child(5) {
-      &:before {
-        background-color: @side-color-5;
-      }
-    }
-    &:nth-child(6) {
-      &:before {
-        background-color: @side-color-6;
-      }
-    }
-    &:nth-child(7) {
-      &:before {
-        background-color: @side-color-7;
-      }
-    }
-    &:nth-child(8) {
-      &:before {
-        background-color: @side-color-8;
-      }
-    }
-    &:nth-child(9) {
-      &:before {
-        background-color: @side-color-9;
-      }
-    }
-    &:hover {
-      &:before {
-        transition: width .2s ease-in;
-        width: @full-width;
-      }
-    }
-    a {
-      color: #dddddd;
-      display: block;
-      padding: 10px 15px 10px 30px;
-      text-decoration: none;
-    }
-  }
-  li.open {
-    &:hover {
-      before {
-        transition: width .2s ease-in;
-        width: @full-width;
-      }
-    }
-  }
-  .dropdown-menu {
-    background-color: #222222;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    width: @full-width;
-  }
-}
-.sidebar-nav li a:hover, .sidebar-nav li a:active, .sidebar-nav li a:focus, .sidebar-nav li.open a:hover, .sidebar-nav li.open a:active, .sidebar-nav li.open a:focus {
-  background-color: transparent;
-  color: #ffffff;
-  text-decoration: none;
-}
-.sidebar-nav>.sidebar-brand {
-  font-size: 20px;
-  height: 65px;
-  line-height: 44px;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*-------------------------------*/
 /*       Hamburger-Cross         */
@@ -319,6 +100,7 @@ html {
     outline: none;
   }
 }
+
 .hamburger.is-closed {
   &:before {
     -webkit-transform: translate3d(0,0,0);
@@ -364,12 +146,14 @@ html {
     bottom: 5px;
   }
 }
+
 .hamburger.is-closed .hamb-top, .hamburger.is-closed .hamb-middle, .hamburger.is-closed .hamb-bottom, .hamburger.is-open .hamb-top, .hamburger.is-open .hamb-middle, .hamburger.is-open .hamb-bottom  {
   height: 4px;
   left: 0;
   position: absolute;
   width: @full-width;
 }
+
 .hamburger.is-open {
   .hamb-top {
     -webkit-transform: rotate(45deg);
