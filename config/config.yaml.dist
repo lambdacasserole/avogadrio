@@ -2,5 +2,4 @@
 
 twitter_url: ~ # The URL of your Twitter profile.
 github_url: ~ # The URL of your GitHub profile.
-chem_name_lookup_service: ~ # The URL of the service to use to look up chemical names.
 sourire_service: ~ # The URL of the Sourire molecule rendering service.
