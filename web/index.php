@@ -4,19 +4,20 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Condense\Database;
 use Avogadrio\SmilesConverter;
 use Avogadrio\MoleculeRenderer;
 
-// Load config.
-$config = Spyc::YAMLLoad(__DIR__ . '/../config/config.yaml');
-
 $app = new Silex\Application();
 
 // Uncomment the line below while debugging your app.
 $app['debug'] = true;
+
+// Load config.
+$config = Spyc::YAMLLoad(__DIR__ . '/../config/config.yaml');
 
 // Services.
 $smilesConverter = new SmilesConverter(new Database('names', __DIR__ . '/../db'));
@@ -32,58 +33,82 @@ $twig = new Twig_Environment($loader, array(
  * Route actions.
  */
 
+/**
+ * Action for frontend route.
+ */
 $app->get('/', function () use ($twig, $config) {
     return $twig->render('index.html.twig', $config);
 });
 
-$app->get('/api/smiles/{width}/{height}/{bgcolor}/{fgcolor}/{smiles}', function ($width, $height, $bgcolor, $fgcolor, $smiles) use ($twig, $config, $moleculeRenderer) {
-    return new \Symfony\Component\HttpFoundation\Response(
-        $moleculeRenderer->renderMoleculeWithBackground($fgcolor, $bgcolor, $smiles, $width, $height)->response('png'),
-        200,
-        ['Content-Type' => 'image/png']
-    );
+/**
+ * Action for SMILES wallpaper route.
+ */
+$app->get('/api/smiles/{width}/{height}/{background}/{foreground}/{smiles}',
+    function ($width, $height, $background, $foreground, $smiles) use ($moleculeRenderer) {
+
+        // Render molecule with background.
+        $image = $moleculeRenderer->renderMoleculeWithBackground($foreground, $background, $smiles, $width, $height);
+
+        // Return image to client.
+        return new Response($image->response('png'), 200, ['Content-Type' => 'image/png']);
 });
 
-$app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($width, $height, $bgcolor, $fgcolor, $name) use ($app, $smilesConverter) {
+/**
+ * Action for molecule-only SMILES route.
+ */
+$app->get('/api/smiles/{width}/{height}/{color}/{smiles}',
+    function ($width, $height, $color, $smiles) use ($moleculeRenderer) {
+
+        // Render molecule only.
+        $image = $moleculeRenderer->renderScaledMolecule($width, $height, $color, $smiles);
+
+        // Return image to client.
+        return new Response($image->response('png'), 200, ['Content-Type' => 'image/png']);
+});
+
+/**
+ * Action for compound name wallpaper route.
+ */
+$app->get('/api/name/{width}/{height}/{background}/{foreground}/{name}',
+    function ($width, $height, $background, $foreground, $name) use ($app, $smilesConverter) {
     
-    // Convert chemical name to SMILES if we can.
-    $smiles = $smilesConverter->nameToSmiles($name);
+        // Convert chemical name to SMILES if we can.
+        $smiles = $smilesConverter->nameToSmiles($name);
 
-    // Forward to SMILES route.
-    if ($smiles !== null) {
-        $smilesRequest = Request::create("/api/smiles/$width/$height/$bgcolor/$fgcolor/$smiles", 'GET');
-        return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
-    }
+        // Forward to SMILES route.
+        if ($smiles !== null) {
+            $smilesRequest = Request::create("/api/smiles/$width/$height/$background/$foreground/$smiles", 'GET');
+            return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
+        }
 
-    // Invalid chemical name.
-    return $app->abort(404, "Chemical name could not be converted to SMILES.");
+        // Invalid chemical name.
+        return $app->abort(404, "Chemical name could not be converted to SMILES.");
 });
 
-$app->get('/api/smiles/{width}/{height}/{color}/{smiles}', function ($width, $height, $color, $smiles) use ($app, $twig, $config, $moleculeRenderer) {
-    return new \Symfony\Component\HttpFoundation\Response(
-        $moleculeRenderer->renderScaledMolecule($width, $height, $color, $smiles)->response('png'),
-        200,
-        ['Content-Type' => 'image/png']
-    );
+/**
+ * Action for molecule-only compound name route.
+ */
+$app->get('/api/name/{width}/{height}/{color}/{name}',
+    function ($width, $height, $color, $name) use ($app, $smilesConverter) {
+
+        // Convert chemical name to SMILES if we can.
+        $smiles = $smilesConverter->nameToSmiles($name);
+
+        // Forward  to SMILES route.
+        if ($smiles !== null) {
+            $smilesRequest = Request::create("/api/smiles/$width/$height/$color/$smiles", 'GET');
+            return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
+        }
+
+        // Invalid chemical name.
+        return $app->abort(404, "Chemical name could not be converted to SMILES.");
 });
 
+/**
+ * Action for checking if compound name exists.
+ */
 $app->get('/api/name/exists/{name}', function ($name) use ($config, $smilesConverter) {
     return new JsonResponse($smilesConverter->nameToSmiles($name) === null ? false : true);
-});
-
-$app->get('/api/name/{width}/{height}/{color}/{name}', function ($width, $height, $color, $name) use ($app, $twig, $config, $smilesConverter) {
-    
-    // Convert chemical name to SMILES if we can.
-    $smiles = $smilesConverter->nameToSmiles($name);
-
-    // Forward  to SMILES route.
-    if ($smiles !== null) {
-        $smilesRequest = Request::create("/api/smiles/$width/$height/$color/$smiles", 'GET');
-        return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
-    }
-
-    // Invalid chemical name.
-    return $app->abort(404, "Chemical name could not be converted to SMILES.");
 });
 
 $app->run();
