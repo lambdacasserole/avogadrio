@@ -42,7 +42,7 @@ class MoleculeRenderer
     public function renderMolecule($smiles, $color)
     {
         // Proxy into Sourire for molecule render.
-        $img = Image::make($this->sourireUrl . urlencode($smiles));
+        $img = Image::make($this->sourireUrl . 'molecule/' . urlencode($smiles));
 
         // Colorize molecule.
         list($r, $g, $b) = sscanf($color, "%02x%02x%02x");
