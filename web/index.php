@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,11 +8,17 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Intervention\Image\ImageManagerStatic as Image;
 
+use Condense\Database;
+use Avogadrio\SmilesConverter;
+
 // Configure GD as image driver.
 Image::configure(array('driver' => 'gd'));
 
 // Load config.
-$config = Spyc::YAMLLoad(__DIR__.'/../config/config.yaml');
+$config = Spyc::YAMLLoad(__DIR__ . '/../config/config.yaml');
+
+// Caching SMILES converter.
+$smilesConverter = new SmilesConverter(new Database('names', __DIR__ . '/../db'));
 
 $app = new Silex\Application();
 
@@ -59,24 +65,6 @@ function renderScaledMolecule($canvasWidth, $canvasHeight, $color, $smiles) {
     return $molecule;
 }
 
-/**
- * Converts a compound name to SMILES notation.
- *
- * @param array $config the configuration settings for the application
- * @param string $name  the name of the compound
- * @return null|string  the SMILES notation for the named compound or null if not found
- */
-function nameToSmiles($config, $name) {
-
-    // Convert chemical name to SMILES if we can using API.
-    $client = new GuzzleHttp\Client(['verify' => false, 'exceptions' => false]);
-    $res = $client->request('GET',
-        str_replace('$name', urlencode($name), $config['chem_name_lookup_service']));
-
-    // If request successful return SMILES, otherwise null.
-    return $res->getStatusCode() == 200 ? $res->getBody() : null;
-}
-
 /*
  * Route actions.
  */
@@ -104,12 +92,12 @@ $app->get('/api/smiles/{width}/{height}/{bgcolor}/{fgcolor}/{smiles}', function 
     );
 });
 
-$app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($width, $height, $bgcolor, $fgcolor, $name) use ($app, $twig, $config) {
+$app->get('/api/name/{width}/{height}/{bgcolor}/{fgcolor}/{name}', function ($width, $height, $bgcolor, $fgcolor, $name) use ($app, $smilesConverter) {
     
     // Convert chemical name to SMILES if we can.
-    $smiles = nameToSmiles($config, $name);
+    $smiles = $smilesConverter->nameToSmiles($name);
 
-    // Forward  to SMILES route.
+    // Forward to SMILES route.
     if ($smiles !== null) {
         $smilesRequest = Request::create("/api/smiles/$width/$height/$bgcolor/$fgcolor/$smiles", 'GET');
         return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
@@ -127,14 +115,14 @@ $app->get('/api/smiles/{width}/{height}/{color}/{smiles}', function ($width, $he
     );
 });
 
-$app->get('/api/name/exists/{name}', function ($name) use ($config) {
-    return new JsonResponse(nameToSmiles($config, $name) === null ? false : true);
+$app->get('/api/name/exists/{name}', function ($name) use ($config, $smilesConverter) {
+    return new JsonResponse($smilesConverter->nameToSmiles($name) === null ? false : true);
 });
 
-$app->get('/api/name/{width}/{height}/{color}/{name}', function ($width, $height, $color, $name) use ($app, $twig, $config) {
+$app->get('/api/name/{width}/{height}/{color}/{name}', function ($width, $height, $color, $name) use ($app, $twig, $config, $smilesConverter) {
     
     // Convert chemical name to SMILES if we can.
-    $smiles = nameToSmiles($config, $name);
+    $smiles = $smilesConverter->nameToSmiles($name);
 
     // Forward  to SMILES route.
     if ($smiles !== null) {
