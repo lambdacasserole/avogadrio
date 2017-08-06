@@ -7,7 +7,7 @@ is designed to be powered by [Sourire](https://github.com/tmoerman/sourire) whic
 [Indigo cheminformatics toolkit](https://github.com/ggasoftware/indigo). Built on the 
 [Silex](https://github.com/silexphp/Silex) micro-framework.
 
-![Screenshot](screenshot_small.png)
+![Logo](logo.png)
 
 ## Prerequisites
 You'll need to have a web server installed and configured with PHP for this to work. I really recommend [XAMPP](https://www.apachefriends.org/), especially for Windows users. Once you've done that you can proceed.
