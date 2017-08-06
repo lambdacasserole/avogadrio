@@ -26,8 +26,17 @@ class SmilesConverter
      *
      * @param Database $db  the database in which to cache lookup results
      */
-    public function __construct($db) {
+    public function __construct($db = null) {
         $this->db = $db;
+    }
+
+    /**
+     * Gets whether or not the API result cache is enabled.
+     *
+     * @return bool true if the cache is enabled, otherwise false
+     */
+    public function isCacheEnabled() {
+        return $this->db !== null;
     }
 
     /**
@@ -42,9 +51,11 @@ class SmilesConverter
         $encoded = urlencode($name);
 
         // Check if we've got the name cached already.
-        $cachedSmiles = $this->db->get('smiles', 'name', $encoded);
-        if ($cachedSmiles !== null) {
-            return $cachedSmiles;
+        if ($this->isCacheEnabled()) {
+            $cachedSmiles = $this->db->get('smiles', 'name', $encoded);
+            if ($cachedSmiles !== null) {
+                return $cachedSmiles;
+            }
         }
 
         // Convert chemical name to SMILES if we can using API.
@@ -54,7 +65,9 @@ class SmilesConverter
         // If request was successful.
         if ($response->getStatusCode() === 200) {
             $smiles = $response->getBody()->getContents();
-            $this->db->insert(['name' => $encoded, 'smiles' => $smiles]); // Cache name for future.
+            if ($this->isCacheEnabled()) {
+                $this->db->insert(['name' => $encoded, 'smiles' => $smiles]); // Cache name for future.
+            }
             return $smiles;
         }
 
