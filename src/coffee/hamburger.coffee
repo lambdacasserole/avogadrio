@@ -13,21 +13,18 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-# Converted to CoffeeScript by Saul Johnson (@lambdacasserole).
+# Converted to CoffeeScript and modified by Saul Johnson (@lambdacasserole).
 
 $(document).ready ->
   trigger = $('.hamburger')
-  # var overlay = $('.overlay');
   isClosed = false
 
   hamburger_cross = ->
     if isClosed == true
-      # overlay.hide();
       trigger.removeClass 'is-open'
       trigger.addClass 'is-closed'
       isClosed = false
     else
-      # overlay.show();
       trigger.removeClass 'is-closed'
       trigger.addClass 'is-open'
       isClosed = true
