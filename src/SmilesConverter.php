@@ -21,6 +21,11 @@ class SmilesConverter
      */
     private $db;
 
+    /**
+     * Initializes a new instance of a conversion service between compound names and SMILES strings.
+     *
+     * @param Database $db  the database in which to cache lookup results
+     */
     public function __construct($db) {
         $this->db = $db;
     }
