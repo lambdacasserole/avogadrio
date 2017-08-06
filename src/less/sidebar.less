@@ -71,11 +71,6 @@ body, html {
   }
 }
 
-#page-content-wrapper {
-  padding-top: 70px;
-  //width: @full-width;
-}
-
 /*-------------------------------*/
 /*       Hamburger-Cross         */
 /*-------------------------------*/
@@ -169,7 +164,6 @@ body, html {
   .hamb-bottom {
     -webkit-transform: rotate(-45deg);
     -webkit-transition: -webkit-transform .2s cubic-bezier(.73,1,.28,.08);
-    // background-color: #1a1a1a;
     background-color: @hamburger-color-open;
     margin-top: -2px;
     top: 50%;
@@ -194,21 +188,4 @@ body, html {
       opacity: 1;
     }
   }
-}
-
-/*-------------------------------*/
-/*          Dark Overlay         */
-/*-------------------------------*/
-
-.overlay {
-    position: absolute;
-    display: none;
-    width: @full-width;
-    height: @full-height;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,.4);
-    z-index: 1;
 }
