@@ -119,6 +119,7 @@ $(document).ready ->
     url = buildUrl screenWidth, screenHeight, foregroundColor, backgroundColor, currentCompoundName
     if smilesMode
       url = buildSmilesUrl screenWidth, screenHeight, foregroundColor, backgroundColor, currentCompoundSmiles
+    downloadButton.attr 'download', if smilesMode then 'smiles_molecule' else currentCompoundName
     downloadButton.attr 'href', url
     
   # Updates the displayed preview.
