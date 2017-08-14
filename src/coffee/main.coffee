@@ -1,7 +1,7 @@
 $(document).ready ->
   # Screen dimensions.
-  screenWidth = window.screen.availWidth
-  screenHeight = window.screen.availHeight
+  screenWidth = window.screen.width
+  screenHeight = window.screen.height
 
   # Wallpaper color attributes.
   foregroundColor = 'ce3838'
