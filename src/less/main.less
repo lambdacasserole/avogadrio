@@ -15,15 +15,16 @@ hr {
   margin-bottom: 5px;
 }
 
-button {
+button, a.download-btn {
   border: 1px solid @button-border;
   border-radius: 5px;
   background: @button-background;
   text-shadow: none;
   padding: 5px 10px 5px 10px;
+  color: #fff;
 }
 
-button:hover {
+button:hover, a.download-btn:hover {
   background: @button-background-hover;
 }
 
@@ -104,7 +105,9 @@ input[type=text] {
 }
 
 .download-btn {
+  display: block;
   width: 100%;
+  text-align: center;
 }
 
 // Logo.

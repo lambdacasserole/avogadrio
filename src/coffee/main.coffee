@@ -18,6 +18,9 @@ $(document).ready ->
 
   # Element to use for wallpaper preview.
   previewElement = $ 'body, html'
+  
+  # Download button element.
+  downloadButton = $ '.download-btn'
 
   # Error message elements.
   errorRows = $ '.row-error'
@@ -110,6 +113,14 @@ $(document).ready ->
   failPreviewSmiles = ->
     invalidCompoundSmilesMessage.show()
 
+  # Updates the download link according to the currently displayed molecule.
+  #
+  updateDownloadLink = ->
+    url = buildUrl screenWidth, screenHeight, foregroundColor, backgroundColor, currentCompoundName
+    if smilesMode
+      url = buildSmilesUrl screenWidth, screenHeight, foregroundColor, backgroundColor, currentCompoundSmiles
+    downloadButton.attr 'href', url
+    
   # Updates the displayed preview.
   #
   # @param [object] element     the element to update
@@ -121,6 +132,7 @@ $(document).ready ->
     element.css 'background-color', "##{background}"
     element.css 'background-position', '50% 50%'
     element.css 'background-repeat', 'no-repeat'
+    updateDownloadLink()
 
   # Refreshes the preview using the compound name text box.
   #
@@ -172,14 +184,6 @@ $(document).ready ->
     smilesMode = true
     errorRows.hide()
     checkSmiles getCompoundSmiles(), refreshPreviewSmiles, failPreviewSmiles
-   
-  # Download button should open rendered image for download.
-   
-  $('.download-btn').on 'click', (e) ->
-    url = buildUrl screenWidth, screenHeight, foregroundColor, backgroundColor, currentCompoundName
-    if smilesMode
-      url = buildSmilesUrl screenWidth, screenHeight, foregroundColor, backgroundColor, currentCompoundSmiles
-    window.open url
 
   # Grab initial values from text boxes.
   currentCompoundName = compoundTextBox.val()
