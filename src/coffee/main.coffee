@@ -7,6 +7,9 @@ $(document).ready ->
   foregroundColor = 'ce3838'
   backgroundColor = '5f0000'
 
+  # Custom label for molecule.
+  customLabel = ''
+
   # Data about current molecule.
   smilesMode = true
   currentCompoundName = ''
@@ -15,6 +18,7 @@ $(document).ready ->
   # Text entry fields for molecules.
   compoundTextBox = $ '.comp-name'
   smilesTextBox = $ '.comp-smiles'
+  customLabelTextBox = $ '.cust-lbl-tbox'
 
   # Element to use for wallpaper preview.
   previewElement = $ 'body, html'
@@ -37,6 +41,11 @@ $(document).ready ->
   getCompoundSmiles = ->
     encodeURIComponent smilesTextBox.val()
 
+  # Gets the sanitized custom molecule label as entered by the user.
+  #
+  getCustomLabel = ->
+    encodeURIComponent customLabelTextBox.val()
+
   # URL builder functions for API.
 
   # Builds a URL to generate a wallpaper image from a compound name.
@@ -48,7 +57,9 @@ $(document).ready ->
   # @param [name] name          the compound name
   #
   buildUrl = (width, height, foreground, background, name) ->
-    "/api/name/#{width}/#{height}/#{background}/#{foreground}/#{name}"
+    url = "/api/name/#{width}/#{height}/#{background}/#{foreground}/#{name}"
+    if customLabel != '' then url += "?label=#{customLabel}"
+    return url
 
   # Builds a URL to generate a molecule-only image from a compound name.
   #
@@ -58,7 +69,9 @@ $(document).ready ->
   # @param [name] name          the compound name
   #
   buildMoleculeOnlyUrl = (width, height, foreground, name) ->
-    "/api/name/#{width}/#{height}/#{foreground}/#{name}"
+    url = "/api/name/#{width}/#{height}/#{foreground}/#{name}"
+    if customLabel != '' then url += "?label=#{customLabel}"
+    return url
 
   # Builds a URL to generate a wallpaper image from a SMILES structure.
   #
@@ -69,7 +82,9 @@ $(document).ready ->
   # @param [name] name          the SMILES structure
   #
   buildSmilesUrl = (width, height, foreground, background, smiles) ->
-    "/api/smiles/#{width}/#{height}/#{background}/#{foreground}/#{smiles}"
+    url = "/api/smiles/#{width}/#{height}/#{background}/#{foreground}/#{smiles}"
+    if customLabel != '' then url += "?label=#{customLabel}"
+    return url
 
   # Builds a URL to generate a molecule-only image from a SMILES structure.
   #
@@ -79,7 +94,9 @@ $(document).ready ->
   # @param [name] smiles        the SMILES structure
   #
   buildSmilesMoleculeOnlyUrl = (width, height, foreground, smiles) ->
-    "/api/smiles/#{width}/#{height}/#{foreground}/#{smiles}"
+    url = "/api/smiles/#{width}/#{height}/#{foreground}/#{smiles}"
+    if customLabel != '' then url += "?label=#{customLabel}"
+    return url
 
   # Checks if a compound name can be converted to SMILES using the configured database.
   #
@@ -151,6 +168,11 @@ $(document).ready ->
     url = buildSmilesMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, currentCompoundSmiles
     updatePreview previewElement, url, backgroundColor
 
+  # Refreshes the preview using the compound name or SMILES structure text box depending on mode.
+  #
+  modeAwareRefreshPreview = ->
+    if smilesMode then refreshPreviewSmiles() else refreshPreviewCompoundName()
+
   # Let's initialize the color pickers.
     
   $('.picker-fg').spectrum
@@ -169,11 +191,11 @@ $(document).ready ->
     
   $('.picker-fg').on 'change', (e) ->
     foregroundColor = $(e.target).val().substring(1)
-    if smilesMode then refreshPreviewSmiles() else refreshPreviewCompoundName()
+    modeAwareRefreshPreview()
 
   $('.picker-bg').on 'change', (e) ->
     backgroundColor = $(e.target).val().substring(1)
-    if smilesMode then refreshPreviewSmiles() else refreshPreviewCompoundName()
+    modeAwareRefreshPreview()
     
   # Compound name update button should refresh the preview.
     
@@ -186,9 +208,16 @@ $(document).ready ->
     errorRows.hide()
     checkSmiles getCompoundSmiles(), refreshPreviewSmiles, failPreviewSmiles
 
+  # Label update button should also refresh preview.
+
+  $('.update-lbl-btn').on 'click', (e) ->
+    customLabel = getCustomLabel()
+    modeAwareRefreshPreview()
+
   # Grab initial values from text boxes.
   currentCompoundName = compoundTextBox.val()
   currentCompoundSmiles = smilesTextBox.val()
+  customLabel = customLabelTextBox.val()
 
   # Initial update.
-  if smilesMode then refreshPreviewSmiles() else refreshPreviewCompoundName()
+  modeAwareRefreshPreview()
