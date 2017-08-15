@@ -15,6 +15,10 @@ class MoleculeRenderer
 {
     private $sourireUrl;
 
+    private $renderChiralLabels;
+    
+    private $customLabel;
+    
     /**
      * Initializes a new instance of a molecule rendering service.
      *
@@ -30,6 +34,10 @@ class MoleculeRenderer
 
         // Configure GD as image driver.
         Image::configure(array('driver' => 'gd'));
+
+        // Set some defaults.
+        $this->renderChiralLabels = true;
+        $this->customLabel = '';
     }
 
     /**
@@ -42,7 +50,11 @@ class MoleculeRenderer
     public function renderMolecule($smiles, $color)
     {
         // Proxy into Sourire for molecule render.
-        $img = Image::make($this->sourireUrl . 'molecule/' . urlencode($smiles));
+        $img = Image::make($this->sourireUrl 
+            . 'molecule/' . urlencode($smiles) 
+            . '?render-stereo-style=' . ($this->renderChiralLabels ? 'old' : 'none') // Label chiral atoms?
+            . '&render-comment-offset=16' // Give some space between label and molecule.
+            . ($this->customLabel === '' ? '' : ('&render-comment=' . urlencode($this->customLabel))));
 
         // Colorize molecule.
         list($r, $g, $b) = sscanf($color, "%02x%02x%02x");
@@ -108,5 +120,49 @@ class MoleculeRenderer
         $img->insert($molecule, 'center');
 
         return $img;
+    }
+
+    /**
+     * Gets whether or not to render the chiral labels next to each chiral center.
+     *
+     * @return bool
+     */
+    public function getRenderChiralLabels()
+    {
+        return $this->renderChiralLabels;
+    }
+
+    /**
+     * Sets whether or not to render the chiral labels next to each chiral center.
+     *
+     * @param bool $renderChiralLabels  true if labels should be rendered, otherwise false
+     * @return MoleculeRenderer
+     */
+    public function setRenderChiralLabels($renderChiralLabels)
+    {
+        $this->renderChiralLabels = $renderChiralLabels;
+        return $this;
+    }
+
+    /**
+     * Gets the custom label to be displayed alongside the molecule.
+     *
+     * @return string
+     */
+    public function getCustomLabel()
+    {
+        return $this->customLabel;
+    }
+
+    /**
+     * Sets the custom label to be displayed alongside the molecule.
+     *
+     * @param string $customLabel   the label to display
+     * @return MoleculeRenderer
+     */
+    public function setCustomLabel($customLabel)
+    {
+        $this->customLabel = $customLabel;
+        return $this;
     }
 }
