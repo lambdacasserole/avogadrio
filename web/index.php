@@ -23,6 +23,8 @@ $config = Spyc::YAMLLoad(__DIR__ . '/../config/config.yaml');
 $smilesConverter = new SmilesConverter(new Database('names', __DIR__ . '/../db'));
 $moleculeRenderer = new MoleculeRenderer($config['sourire_service']);
 
+$moleculeRenderer->setRenderChiralLabels(false); // Disable chiral labels.
+
 // Twig initialization.
 $loader = new Twig_Loader_Filesystem(__DIR__.'/../templates');
 $twig = new Twig_Environment($loader, array(
@@ -44,7 +46,10 @@ $app->get('/', function () use ($twig, $config) {
  * Action for SMILES wallpaper route.
  */
 $app->get('/api/smiles/{width}/{height}/{background}/{foreground}/{smiles}',
-    function ($width, $height, $background, $foreground, $smiles) use ($moleculeRenderer) {
+    function (Request $request, $width, $height, $background, $foreground, $smiles) use ($moleculeRenderer) {
+
+        // Add label.
+        $moleculeRenderer->setCustomLabel($request->get('label'));
 
         // Render molecule with background.
         $image = $moleculeRenderer->renderMoleculeWithBackground($smiles, $foreground, $background, $width, $height);
@@ -57,7 +62,10 @@ $app->get('/api/smiles/{width}/{height}/{background}/{foreground}/{smiles}',
  * Action for molecule-only SMILES route.
  */
 $app->get('/api/smiles/{width}/{height}/{color}/{smiles}',
-    function ($width, $height, $color, $smiles) use ($moleculeRenderer) {
+    function (Request $request, $width, $height, $color, $smiles) use ($moleculeRenderer) {
+
+        // Add label.
+        $moleculeRenderer->setCustomLabel($request->get('label'));
 
         // Render molecule only.
         $image = $moleculeRenderer->renderScaledMolecule($smiles, $color, $width, $height);
@@ -70,14 +78,15 @@ $app->get('/api/smiles/{width}/{height}/{color}/{smiles}',
  * Action for compound name wallpaper route.
  */
 $app->get('/api/name/{width}/{height}/{background}/{foreground}/{name}',
-    function ($width, $height, $background, $foreground, $name) use ($app, $smilesConverter) {
+    function (Request $request, $width, $height, $background, $foreground, $name) use ($app, $smilesConverter) {
     
         // Convert chemical name to SMILES if we can.
         $smiles = $smilesConverter->nameToSmiles($name);
 
         // Forward to SMILES route.
         if ($smiles !== null) {
-            $smilesRequest = Request::create("/api/smiles/$width/$height/$background/$foreground/$smiles", 'GET');
+            $smilesRequest = Request::create("/api/smiles/$width/$height/$background/$foreground/$smiles",
+                'GET', $request->query->all());
             return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
         }
 
@@ -89,14 +98,15 @@ $app->get('/api/name/{width}/{height}/{background}/{foreground}/{name}',
  * Action for molecule-only compound name route.
  */
 $app->get('/api/name/{width}/{height}/{color}/{name}',
-    function ($width, $height, $color, $name) use ($app, $smilesConverter) {
+    function (Request $request, $width, $height, $color, $name) use ($app, $smilesConverter) {
 
         // Convert chemical name to SMILES if we can.
         $smiles = $smilesConverter->nameToSmiles($name);
 
         // Forward  to SMILES route.
         if ($smiles !== null) {
-            $smilesRequest = Request::create("/api/smiles/$width/$height/$color/$smiles", 'GET');
+            $smilesRequest = Request::create("/api/smiles/$width/$height/$color/$smiles",
+                'GET', $request->query->all());
             return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
         }
 
