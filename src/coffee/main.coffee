@@ -146,7 +146,21 @@ $(document).ready ->
       url = buildSmilesUrl screenWidth, screenHeight, foregroundColor, backgroundColor, currentCompoundSmiles
     downloadButton.attr 'download', if smilesMode then 'smiles_molecule' else currentCompoundName
     downloadButton.attr 'href', url
-    
+
+  # Updates the page URL (query string) according to the currently displayed molecule.
+  #
+  updateUrl = ->
+    params = {
+      'label': customLabel,
+      'background': backgroundColor,
+      'foreground': foregroundColor
+    }
+    if smilesMode
+      params['smiles'] = currentCompoundSmiles
+    else
+      params['compound'] = currentCompoundName
+    setQueryParams params
+
   # Updates the displayed preview.
   #
   # @param [object] element     the element to update
@@ -159,6 +173,7 @@ $(document).ready ->
     element.css 'background-position', '50% 50%'
     element.css 'background-repeat', 'no-repeat'
     updateDownloadLink()
+    updateUrl()
 
   # Refreshes the preview using the compound name text box.
   #

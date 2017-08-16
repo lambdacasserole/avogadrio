@@ -14,3 +14,24 @@ window.getParameterByName = (name, url) ->
   if !results[2]
     return ''
   decodeURIComponent results[2].replace(/\+/g, ' ')
+
+# Sets the query string on the page without reloading it.
+#
+# @param [string] str the new query string
+#
+window.setQueryString = (str) ->
+  if history.pushState
+    url = window.location.protocol + '//' + window.location.host + window.location.pathname + '?' + str
+    window.history.pushState { path: url }, '', url
+
+# Sets the query string on the page without reloading it, according to the properties of an object.
+#
+# @param [object] params  the object containing the keys and values to use
+#
+window.setQueryParams = (params) ->
+  str = ''
+  for k, v of params
+    if v == '' then continue
+    if str != '' then str += '&'
+    str += "#{k}=#{v}"
+  setQueryString str
