@@ -118,6 +118,14 @@ $(document).ready ->
     regex = /^([^J][a-z0-9@+\-\[\]\(\)\\\/%=#$]{0,})$/ig
     if regex.test smiles then success() else fail()
 
+  # Checks if a string is a valid hex color.
+  #
+  # @param [string] color the color to check
+  #
+  checkColor = (color) ->
+    regex = /^(([0-9a-fA-F]{2}){3}|([0-9a-fA-F]){3})$/ig
+    regex.test color
+
   # Actions to take when we refresh the preview.
 
   # Shows the invalid compound name error message.
@@ -173,6 +181,14 @@ $(document).ready ->
   modeAwareRefreshPreview = ->
     if smilesMode then refreshPreviewSmiles() else refreshPreviewCompoundName()
 
+  passedForeground = getParameterByName 'foreground'
+  if passedForeground != null && checkColor(passedForeground)
+    foregroundColor = passedForeground
+
+  passedBackground = getParameterByName 'background'
+  if passedBackground != null && checkColor(passedBackground)
+    backgroundColor = passedBackground
+
   # Let's initialize the color pickers.
     
   $('.picker-fg').spectrum
@@ -180,7 +196,7 @@ $(document).ready ->
     clickoutFiresChange: true
     chooseText: 'Update'
     preferredFormat: 'hex'
-    
+
   $('.picker-bg').spectrum
     color: "##{backgroundColor}"
     clickoutFiresChange: true
@@ -214,7 +230,24 @@ $(document).ready ->
     customLabel = getCustomLabel()
     modeAwareRefreshPreview()
 
+  # Put passed parameter values into text boxes if needed.
+
+  passedCompoundName = getParameterByName 'compound'
+  if passedCompoundName != null
+    compoundTextBox.val(passedCompoundName)
+    smilesMode = false
+
+  passedSmiles = getParameterByName 'smiles'
+  if passedSmiles != null
+    smilesTextBox.val(passedSmiles)
+    smilesMode = true
+
+  passedLabel = getParameterByName 'label'
+  if passedLabel != null
+    customLabelTextBox.val(passedLabel)
+
   # Grab initial values from text boxes.
+
   currentCompoundName = compoundTextBox.val()
   currentCompoundSmiles = smilesTextBox.val()
   customLabel = customLabelTextBox.val()
