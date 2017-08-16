@@ -16,7 +16,8 @@
 # Converted to CoffeeScript and modified by Saul Johnson (@lambdacasserole).
 
 $(document).ready ->
-  trigger = $('.hamburger')
+  trigger = $ '.hamburger'
+  wrapper = $ '#wrapper'
   isClosed = false
 
   hamburger_cross = ->
@@ -29,8 +30,16 @@ $(document).ready ->
       trigger.addClass 'is-open'
       isClosed = true
 
+  toggle_open = ->
+    wrapper.toggleClass 'toggled'
+    hamburger_cross()
+
   trigger.click ->
     hamburger_cross()
     
   $('[data-toggle="offcanvas"]').click ->
-    $('#wrapper').toggleClass 'toggled'
+    wrapper.toggleClass 'toggled'
+
+  # Expand burger menu if URL asks for it.
+  if getParameterByName('showmenu') == 'true'
+    toggle_open()
