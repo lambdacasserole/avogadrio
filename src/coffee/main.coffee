@@ -115,7 +115,7 @@ $(document).ready ->
   # @param [function] fail    the failure callback
   #
   checkSmiles = (smiles, success, fail) ->
-    regex = /^([^J][a-z0-9@+\-\[\]\(\)\\\/%=#$]{0,})$/ig
+    regex = /^([^J][a-z0-9@+\.\-\[\]\(\)\\\/%=#$]{0,})$/ig
     if regex.test smiles then success() else fail()
 
   # Checks if a string is a valid hex color.
