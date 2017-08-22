@@ -14,7 +14,7 @@ use Avogadrio\MoleculeRenderer;
 $app = new Silex\Application();
 
 // Uncomment the line below while debugging your app.
-$app['debug'] = true;
+// $app['debug'] = true;
 
 // Load config.
 $config = Spyc::YAMLLoad(__DIR__ . '/../config/config.yaml');
