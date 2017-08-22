@@ -78,16 +78,22 @@ $app->get('/api/smiles/{width}/{height}/{color}/{smiles}',
  * Action for compound name wallpaper route.
  */
 $app->get('/api/name/{width}/{height}/{background}/{foreground}/{name}',
-    function (Request $request, $width, $height, $background, $foreground, $name) use ($app, $smilesConverter) {
+    function (Request $request, $width, $height, $background, $foreground, $name) use ($app, $moleculeRenderer, $smilesConverter) {
     
         // Convert chemical name to SMILES if we can.
         $smiles = $smilesConverter->nameToSmiles($name);
 
         // Forward to SMILES route.
         if ($smiles !== null) {
-            $smilesRequest = Request::create("/api/smiles/$width/$height/$background/$foreground/$smiles",
-                'GET', $request->query->all());
-            return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
+
+            // Add label.
+            $moleculeRenderer->setCustomLabel($request->get('label'));
+
+            // Render molecule with background.
+            $image = $moleculeRenderer->renderMoleculeWithBackground($smiles, $foreground, $background, $width, $height);
+
+            // Return image to client.
+            return new Response($image->response('png'), 200, ['Content-Type' => 'image/png']);
         }
 
         // Invalid chemical name.
@@ -98,16 +104,22 @@ $app->get('/api/name/{width}/{height}/{background}/{foreground}/{name}',
  * Action for molecule-only compound name route.
  */
 $app->get('/api/name/{width}/{height}/{color}/{name}',
-    function (Request $request, $width, $height, $color, $name) use ($app, $smilesConverter) {
+    function (Request $request, $width, $height, $color, $name) use ($app, $moleculeRenderer, $smilesConverter) {
 
         // Convert chemical name to SMILES if we can.
         $smiles = $smilesConverter->nameToSmiles($name);
 
         // Forward  to SMILES route.
         if ($smiles !== null) {
-            $smilesRequest = Request::create("/api/smiles/$width/$height/$color/$smiles",
-                'GET', $request->query->all());
-            return $app->handle($smilesRequest, HttpKernelInterface::SUB_REQUEST);
+
+            // Add label.
+            $moleculeRenderer->setCustomLabel($request->get('label'));
+
+            // Render molecule only.
+            $image = $moleculeRenderer->renderScaledMolecule($smiles, $color, $width, $height);
+
+            // Return image to client.
+            return new Response($image->response('png'), 200, ['Content-Type' => 'image/png']);
         }
 
         // Invalid chemical name.
