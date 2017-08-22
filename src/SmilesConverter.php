@@ -48,7 +48,7 @@ class SmilesConverter
     public function nameToSmiles($name)
     {
         // Sanitize name for URLs.
-        $encoded = urlencode($name);
+        $encoded = rawurlencode($name);
 
         // Check if we've got the name cached already.
         if ($this->isCacheEnabled()) {

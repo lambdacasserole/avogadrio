@@ -34,7 +34,7 @@ $(document).ready ->
   # Gets the sanitized compound name as entered by the user.
   #
   getCompoundName = ->
-    encodeURIComponent compoundTextBox.val().replace(/\s/g, '')
+    encodeURIComponent compoundTextBox.val()
 
   # Gets the sanitized compound SMILES structure as entered by the user.
   #

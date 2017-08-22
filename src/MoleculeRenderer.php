@@ -51,10 +51,10 @@ class MoleculeRenderer
     {
         // Proxy into Sourire for molecule render.
         $img = Image::make($this->sourireUrl 
-            . 'molecule/' . urlencode($smiles) 
+            . 'molecule/' . rawurlencode($smiles) 
             . '?render-stereo-style=' . ($this->renderChiralLabels ? 'old' : 'none') // Label chiral atoms?
             . '&render-comment-offset=16' // Give some space between label and molecule.
-            . ($this->customLabel === '' ? '' : ('&render-comment=' . urlencode($this->customLabel))));
+            . ($this->customLabel === '' ? '' : ('&render-comment=' . rawurlencode($this->customLabel))));
 
         // Colorize molecule.
         list($r, $g, $b) = sscanf($color, "%02x%02x%02x");
