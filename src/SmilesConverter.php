@@ -38,6 +38,17 @@ class SmilesConverter
     public function isCacheEnabled() {
         return $this->db !== null;
     }
+    
+    /**
+     * Attempts to fix any errors in a SMILES string and returns the result.
+     *
+     * @param string $smiles    the SMILES string to fix
+     * @return string           the fixed SMILES string
+     */
+    private static function fixSmiles($smiles) {
+        $output = str_replace('|', '', $smiles); // Zap vertical bars.
+        return $output;
+    }
 
     /**
      * Converts a compound name to SMILES notation.
@@ -54,7 +65,7 @@ class SmilesConverter
         if ($this->isCacheEnabled()) {
             $cachedSmiles = $this->db->get('smiles', 'name', $encoded);
             if ($cachedSmiles !== null) {
-                return $cachedSmiles;
+                return self::fixSmiles($cachedSmiles);
             }
         }
 
@@ -68,9 +79,9 @@ class SmilesConverter
             if ($this->isCacheEnabled()) {
                 $this->db->insert(['name' => $encoded, 'smiles' => $smiles]); // Cache name for future.
             }
-            return $smiles;
+            return self::fixSmiles($smiles);
         }
-
+        
         // Request failed.
         return null;
     }
