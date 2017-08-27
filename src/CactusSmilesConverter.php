@@ -12,7 +12,7 @@ use \GuzzleHttp\Client;
  * @since 06/08/2017
  * @package Avogadrio
  */
-class SmilesConverter
+class CactusSmilesConverter
 {
     /**
      * The compound name/SMILES cache database.
