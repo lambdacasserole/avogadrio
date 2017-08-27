@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Condense\Database;
 use Avogadrio\CactusSmilesConverter;
+use Avogadrio\WikipediaSmilesConverter;
 use Avogadrio\MoleculeRenderer;
 
 $app = new Silex\Application();
@@ -20,7 +21,7 @@ $app = new Silex\Application();
 $config = Spyc::YAMLLoad(__DIR__ . '/../config/config.yaml');
 
 // Services.
-$smilesConverter = new CactusSmilesConverter(new Database('names', __DIR__ . '/../db'));
+$smilesConverter = new CactusSmilesConverter(new Database('names', __DIR__ . '/../db'), new WikipediaSmilesConverter());
 $moleculeRenderer = new MoleculeRenderer($config['sourire_service']);
 
 $moleculeRenderer->setRenderChiralLabels(false); // Disable chiral labels.
