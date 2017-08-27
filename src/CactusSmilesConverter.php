@@ -33,7 +33,7 @@ class CactusSmilesConverter extends SmilesConverter
         $encoded = rawurlencode($name);
 
         // Check if we've got the name cached already.
-        $cached = $this->getIfCachedAndValid($encoded);
+        $cached = $this->getIfCached($encoded);
         if ($cached !== null) {
             return $cached;
         }

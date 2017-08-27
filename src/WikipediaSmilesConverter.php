@@ -34,7 +34,7 @@ class WikipediaSmilesConverter extends SmilesConverter
         $encoded = str_replace(' ', '_', $name);
 
         // Check if we've got the name cached already.
-        $cached = $this->getIfCachedAndValid($encoded);
+        $cached = $this->getIfCached($encoded);
         if ($cached !== null) {
             return $cached;
         }

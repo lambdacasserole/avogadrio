@@ -48,17 +48,6 @@ abstract class SmilesConverter
     }
 
     /**
-     * Attempts to fix any errors in a SMILES string and returns the result.
-     *
-     * @param string $smiles    the SMILES string to fix
-     * @return string           the fixed SMILES string
-     */
-    protected static function fixSmiles($smiles) {
-        $output = str_replace('|', '', $smiles); // Zap vertical bars.
-        return $output;
-    }
-
-    /**
      * Returns true if a given SMILES string is valid, otherwise returns false.
      *
      * @param string $smiles    the SMILES string to check
@@ -69,19 +58,27 @@ abstract class SmilesConverter
     }
 
     /**
-     * @param $name
-     * @return string
+     * Returns a cached SMILES string from its corresponding compound name, if present.
+     *
+     * @param string $name  the name of the compound to return
+     * @return string       the SMILES structure of the compound, or null if not found
      */
-    protected function getIfCachedAndValid($name) {
+    protected function getIfCached($name) {
         if ($this->isCacheEnabled()) {
             $cachedSmiles = $this->db->get('smiles', 'name', $name);
-            if ($cachedSmiles !== null && self::isValidSmiles($cachedSmiles)) {
+            if ($cachedSmiles !== null) {
                 return $cachedSmiles;
             }
         }
         return null;
     }
 
+    /**
+     * Caches a compound name against its corresponding SMILES string.
+     *
+     * @param string $name      the compound name
+     * @param string $smiles    the corresponding SMILES string
+     */
     protected function cache($name, $smiles) {
         if ($this->isCacheEnabled()) {
             $this->db->insert(['name' => $name, 'smiles' => $smiles]); // Cache name for future.
