@@ -15,7 +15,8 @@ use \GuzzleHttp\Client;
 class CactusSmilesConverter extends SmilesConverter
 {
     /**
-     * Initializes a new instance of a conversion service between compound names and SMILES strings.
+     * Initializes a new instance of a conversion service between compound names and SMILES strings that uses a
+     * dedicated lookup service.
      *
      * @param Database $db              the database in which to cache lookup results
      * @param SmilesConverter $fallback the conversion service to fall back to in case of error

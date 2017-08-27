@@ -16,7 +16,8 @@ use pQuery;
 class WikipediaSmilesConverter extends SmilesConverter
 {
     /**
-     * Initializes a new instance of a conversion service between compound names and SMILES strings.
+     * Initializes a new instance of a conversion service between compound names and SMILES strings that scrapes SMILES
+     * strings from Wikipedia.
      *
      * @param Database $db              the database in which to cache lookup results
      * @param SmilesConverter $fallback the conversion service to fall back to in case of error
