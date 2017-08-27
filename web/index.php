@@ -5,10 +5,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Condense\Database;
-use Avogadrio\SmilesConverter;
+use Avogadrio\CactusSmilesConverter;
+use Avogadrio\WikipediaSmilesConverter;
 use Avogadrio\MoleculeRenderer;
 
 $app = new Silex\Application();
@@ -20,7 +20,8 @@ $app = new Silex\Application();
 $config = Spyc::YAMLLoad(__DIR__ . '/../config/config.yaml');
 
 // Services.
-$smilesConverter = new SmilesConverter(new Database('names', __DIR__ . '/../db'));
+$wikiSmilesConverter = new WikipediaSmilesConverter(new Database('names_wiki', __DIR__ . '/../db'));
+$smilesConverter = new CactusSmilesConverter(new Database('names', __DIR__ . '/../db'), $wikiSmilesConverter);
 $moleculeRenderer = new MoleculeRenderer($config['sourire_service']);
 
 $moleculeRenderer->setRenderChiralLabels(false); // Disable chiral labels.
