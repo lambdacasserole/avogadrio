@@ -41,7 +41,7 @@ class WikipediaSmilesConverter extends SmilesConverter
         }
 
         // Get Wikipedia page for compound.
-        $client = new Client();
+        $client = new Client(['exceptions' => false]);
         $response = $client->request('GET', "https://en.wikipedia.org/wiki/$encoded");
 
         // If there is a page.
