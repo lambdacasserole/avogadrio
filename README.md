@@ -62,4 +62,4 @@ A big thank you to:
 * [Nile Red](https://www.youtube.com/user/TheRedNile) inspired me to build this. I wasn't that big on chemistry until I came across his videos.
 * [Jay Holtslander](https://codepen.io/j_holtslander/) put together the hamburger menu/sidebar combo in his [Pen](https://codepen.io/j_holtslander/pen/XmpMEp) on CodePen. I believe it's derived from earlier work by [maridlcrmn](https://bootsnipp.com/maridlcrmn).
 * [Thomas Moerman](https://github.com/tmoerman) created [Sourire](https://github.com/tmoerman/sourire), which really simplified the molecule rendering process.
-* [Andre Plötze](https://github.com/andrepxx) created [Sourire](https://github.com/tmoerman/sourire), which really simplified the molecule rendering process.
+* [Andre Plötze](https://github.com/andrepxx) created [pure-knob](https://github.com/andrepxx/pure-knob), which is used here for the rotation knob/wheel/dial thing.
