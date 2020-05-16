@@ -16,9 +16,11 @@ class MoleculeRenderer
     private $sourireUrl;
 
     private $renderChiralLabels;
-    
+
     private $customLabel;
-    
+
+    private $rotation;
+
     /**
      * Initializes a new instance of a molecule rendering service.
      *
@@ -50,8 +52,8 @@ class MoleculeRenderer
     public function renderMolecule($smiles, $color)
     {
         // Proxy into Sourire for molecule render.
-        $img = Image::make($this->sourireUrl 
-            . 'molecule/' . rawurlencode($smiles) 
+        $img = Image::make($this->sourireUrl
+            . 'molecule/' . rawurlencode($smiles)
             . '?render-stereo-style=' . ($this->renderChiralLabels ? 'old' : 'none') // Label chiral atoms?
             . '&render-comment-offset=16' // Give some space between label and molecule.
             . ($this->customLabel === '' ? '' : ('&render-comment=' . rawurlencode($this->customLabel))));
@@ -60,6 +62,7 @@ class MoleculeRenderer
         list($r, $g, $b) = sscanf($color, "%02x%02x%02x");
         $unit = 100 / 255;
         $img->colorize($unit * $r, $unit * $g, $unit * $b);
+        $img->rotate($this->rotation);
 
         return $img; // Return molecule image.
     }
@@ -72,6 +75,7 @@ class MoleculeRenderer
      * @param int $canvasWidth  the width of the canvas to scale the molecule to
      * @param int $canvasHeight the height of the canvas to scale the molecule to
      * @param float $proportion the maximum proportion of the canvas the molecule should occupy (in either direction)
+     * @param float $rotation  the angle to rotate the image by
      * @return \Intervention\Image\Image
      */
     public function renderScaledMolecule($smiles, $color, $canvasWidth, $canvasHeight, $proportion = 0.8)
@@ -163,6 +167,28 @@ class MoleculeRenderer
     public function setCustomLabel($customLabel)
     {
         $this->customLabel = $customLabel;
+        return $this;
+    }
+
+    /**
+     * Gets the angle of rotation to apply to the molecule.
+     *
+     * @return float
+     */
+    public function getRotation()
+    {
+        return $this->rotation;
+    }
+
+    /**
+     * Sets the angle of rotation to apply to the molecule.
+     *
+     * @param float $rotation   the angle of rotation to apply
+     * @return MoleculeRenderer
+     */
+    public function setRotation($rotation)
+    {
+        $this->rotation = $rotation;
         return $this;
     }
 }
