@@ -240,6 +240,25 @@ $(document).ready ->
     backgroundColor = $(e.target).val().substring(1)
     modeAwareRefreshPreview()
 
+  # Set up the rotation knob.
+
+  rotationKnob = pureknob.createKnob(88, 88)
+  rotationKnob.setProperty 'angleStart', 0
+  rotationKnob.setProperty 'angleEnd', Math.PI * 2
+  rotationKnob.setProperty 'colorFG', '#C0C0C0'
+  rotationKnob.setProperty 'colorBG', '#505050'
+  rotationKnob.setProperty 'trackWidth', 0.4
+  rotationKnob.setProperty 'valMin', 0
+  rotationKnob.setProperty 'valMax', 359
+  rotationKnob.setProperty 'needle', true
+  rotationKnob.setValue 0
+  rotationKnob.addListener (knob, value) ->
+    rotation = value
+    modeAwareRefreshPreview()
+  knobNode = rotationKnob.node()
+  knobElem = document.getElementById 'rotation_knob'
+  knobElem.appendChild knobNode
+
   # Compound name update button should refresh the preview.
 
   $('.update-btn').on 'click', (e) ->
@@ -257,7 +276,7 @@ $(document).ready ->
     customLabel = getCustomLabel()
     modeAwareRefreshPreview()
 
-  # Put passed parameter values into text boxes if needed.
+  # Put passed parameter values into UI if needed.
 
   passedCompoundName = getParameterByName 'compound'
   if passedCompoundName != null
@@ -273,20 +292,15 @@ $(document).ready ->
   if passedLabel != null
     customLabelTextBox.val(passedLabel)
 
-  # Grab initial values from text boxes.
+  passedRotation = getParameterByName 'rotation'
+  if passedRotation != null
+    rotationKnob.setValue(passedRotation)
+
+  # Grab initial values from UI.
 
   currentCompoundName = compoundTextBox.val()
   currentCompoundSmiles = smilesTextBox.val()
   customLabel = customLabelTextBox.val()
-
-  window.knobListener = (k, v) ->
-    rotation = v
-    modeAwareRefreshPreview()
-  initRotationKnob()
-
-  passedRotation = getParameterByName 'rotation'
-  if passedRotation != null
-    rotationKnob.setValue(passedRotation)
   rotation = rotationKnob.getValue()
 
   # Initial update.
