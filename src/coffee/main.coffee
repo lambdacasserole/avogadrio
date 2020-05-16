@@ -7,6 +7,9 @@ $(document).ready ->
   foregroundColor = 'ce3838'
   backgroundColor = '5f0000'
 
+  # Transforms.
+  rotation = 0
+
   # Custom label for molecule.
   customLabel = ''
 
@@ -22,7 +25,7 @@ $(document).ready ->
 
   # Element to use for wallpaper preview.
   previewElement = $ 'body, html'
-  
+
   # Download button element.
   downloadButton = $ '.download-btn'
 
@@ -58,8 +61,10 @@ $(document).ready ->
   #
   buildUrl = (width, height, foreground, background, name) ->
     url = "/api/name/#{width}/#{height}/#{background}/#{foreground}/#{name}"
-    if customLabel != '' then url += "?label=#{customLabel}"
-    return url
+    qs = ""
+    if customLabel != '' then qs += "label=#{customLabel}"
+    if rotation != 0 then qs += "rotation=#{rotation}"
+    return if qs == "" then url else url + "?" + qs
 
   # Builds a URL to generate a molecule-only image from a compound name.
   #
@@ -70,8 +75,10 @@ $(document).ready ->
   #
   buildMoleculeOnlyUrl = (width, height, foreground, name) ->
     url = "/api/name/#{width}/#{height}/#{foreground}/#{name}"
-    if customLabel != '' then url += "?label=#{customLabel}"
-    return url
+    qs = ""
+    if customLabel != '' then qs += "label=#{customLabel}"
+    if rotation != 0 then qs += "rotation=#{rotation}"
+    return if qs == "" then url else url + "?" + qs
 
   # Builds a URL to generate a wallpaper image from a SMILES structure.
   #
@@ -83,8 +90,10 @@ $(document).ready ->
   #
   buildSmilesUrl = (width, height, foreground, background, smiles) ->
     url = "/api/smiles/#{width}/#{height}/#{background}/#{foreground}/#{smiles}"
-    if customLabel != '' then url += "?label=#{customLabel}"
-    return url
+    qs = ""
+    if customLabel != '' then qs += "label=#{customLabel}"
+    if rotation != 0 then qs += "rotation=#{rotation}"
+    return if qs == "" then url else url + "?" + qs
 
   # Builds a URL to generate a molecule-only image from a SMILES structure.
   #
@@ -95,8 +104,10 @@ $(document).ready ->
   #
   buildSmilesMoleculeOnlyUrl = (width, height, foreground, smiles) ->
     url = "/api/smiles/#{width}/#{height}/#{foreground}/#{smiles}"
-    if customLabel != '' then url += "?label=#{customLabel}"
-    return url
+    qs = ""
+    if customLabel != '' then qs += "label=#{customLabel}"
+    if rotation != 0 then qs += "rotation=#{rotation}"
+    return if qs == "" then url else url + "?" + qs
 
   # Checks if a compound name can be converted to SMILES using the configured database.
   #
@@ -153,7 +164,8 @@ $(document).ready ->
     params = {
       'label': customLabel,
       'background': backgroundColor,
-      'foreground': foregroundColor
+      'foreground': foregroundColor,
+      'rotation': rotation
     }
     if smilesMode
       params['smiles'] = currentCompoundSmiles
@@ -180,16 +192,16 @@ $(document).ready ->
   refreshPreviewCompoundName = ->
     currentCompoundName = getCompoundName()
     smilesMode = false
-    url = buildMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, currentCompoundName
-    updatePreview previewElement, url, backgroundColor
+    url = buildMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, currentCompoundName, rotation
+    updatePreview previewElement, url, backgroundColor, rotation
 
   # Refreshes the preview using the SMILES structure text box.
   #
   refreshPreviewSmiles = ->
     currentCompoundSmiles = getCompoundSmiles()
     smilesMode = true
-    url = buildSmilesMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, currentCompoundSmiles
-    updatePreview previewElement, url, backgroundColor
+    url = buildSmilesMoleculeOnlyUrl screenWidth, screenHeight, foregroundColor, currentCompoundSmiles, rotation
+    updatePreview previewElement, url, backgroundColor, rotation
 
   # Refreshes the preview using the compound name or SMILES structure text box depending on mode.
   #
@@ -205,7 +217,7 @@ $(document).ready ->
     backgroundColor = passedBackground
 
   # Let's initialize the color pickers.
-    
+
   $('.picker-fg').spectrum
     color: "##{foregroundColor}"
     clickoutFiresChange: true
@@ -219,7 +231,7 @@ $(document).ready ->
     preferredFormat: 'hex'
 
   # Set up color picker change events.
-    
+
   $('.picker-fg').on 'change', (e) ->
     foregroundColor = $(e.target).val().substring(1)
     modeAwareRefreshPreview()
@@ -227,9 +239,28 @@ $(document).ready ->
   $('.picker-bg').on 'change', (e) ->
     backgroundColor = $(e.target).val().substring(1)
     modeAwareRefreshPreview()
-    
+
+  # Set up the rotation knob.
+
+  rotationKnob = pureknob.createKnob(88, 88)
+  rotationKnob.setProperty 'angleStart', 0
+  rotationKnob.setProperty 'angleEnd', Math.PI * 2
+  rotationKnob.setProperty 'colorFG', '#C0C0C0'
+  rotationKnob.setProperty 'colorBG', '#505050'
+  rotationKnob.setProperty 'trackWidth', 0.4
+  rotationKnob.setProperty 'valMin', 0
+  rotationKnob.setProperty 'valMax', 359
+  rotationKnob.setProperty 'needle', true
+  rotationKnob.setValue 0
+  rotationKnob.addListener (knob, value) ->
+    rotation = value
+    modeAwareRefreshPreview()
+  knobNode = rotationKnob.node()
+  knobElem = document.getElementById 'rotation_knob'
+  knobElem.appendChild knobNode
+
   # Compound name update button should refresh the preview.
-    
+
   $('.update-btn').on 'click', (e) ->
     errorRows.hide()
     checkMoleculeName getCompoundName(), refreshPreviewCompoundName, failPreview
@@ -245,7 +276,7 @@ $(document).ready ->
     customLabel = getCustomLabel()
     modeAwareRefreshPreview()
 
-  # Put passed parameter values into text boxes if needed.
+  # Put passed parameter values into UI if needed.
 
   passedCompoundName = getParameterByName 'compound'
   if passedCompoundName != null
@@ -261,11 +292,16 @@ $(document).ready ->
   if passedLabel != null
     customLabelTextBox.val(passedLabel)
 
-  # Grab initial values from text boxes.
+  passedRotation = getParameterByName 'rotation'
+  if passedRotation != null
+    rotationKnob.setValue(passedRotation)
+
+  # Grab initial values from UI.
 
   currentCompoundName = compoundTextBox.val()
   currentCompoundSmiles = smilesTextBox.val()
   customLabel = customLabelTextBox.val()
+  rotation = rotationKnob.getValue()
 
   # Initial update.
   modeAwareRefreshPreview()
