@@ -6,6 +6,7 @@ var gulp = require('gulp');
 
 // Less and CSS stuff.
 var less = require('gulp-less');
+var prefix = require('gulp-autoprefixer');
 var minifycss = require('gulp-minify-css');
 var coffee = require('gulp-coffee');
 
@@ -13,6 +14,9 @@ var coffee = require('gulp-coffee');
 gulp.task('less', function () {
     return gulp.src(['./src/less/*.less'])
         .pipe(less())
+        .pipe(prefix(
+            "last 1 version", "> 1%", "ie 8", "ie 7"
+        ))
         .pipe(minifycss()) // Minify resulting CSS.
         .pipe(gulp.dest('./web/css'));
 });
