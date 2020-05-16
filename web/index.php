@@ -14,7 +14,7 @@ use Avogadrio\MoleculeRenderer;
 $app = new Silex\Application();
 
 // Uncomment the line below while debugging your app.
-// $app['debug'] = true;
+$app['debug'] = true;
 
 // Load config.
 $config = Spyc::YAMLLoad(__DIR__ . '/../config/config.yaml');
@@ -52,6 +52,9 @@ $app->get('/api/smiles/{width}/{height}/{background}/{foreground}/{smiles}',
         // Add label.
         $moleculeRenderer->setCustomLabel($request->get('label'));
 
+        // Add rotation.
+        $moleculeRenderer->setRotation((float) $request->get('rotation'));
+
         // Render molecule with background.
         $image = $moleculeRenderer->renderMoleculeWithBackground($smiles, $foreground, $background, $width, $height);
 
@@ -68,6 +71,9 @@ $app->get('/api/smiles/{width}/{height}/{color}/{smiles}',
         // Add label.
         $moleculeRenderer->setCustomLabel($request->get('label'));
 
+        // Add rotation.
+        $moleculeRenderer->setRotation((float) $request->get('rotation'));
+
         // Render molecule only.
         $image = $moleculeRenderer->renderScaledMolecule($smiles, $color, $width, $height);
 
@@ -80,7 +86,7 @@ $app->get('/api/smiles/{width}/{height}/{color}/{smiles}',
  */
 $app->get('/api/name/{width}/{height}/{background}/{foreground}/{name}',
     function (Request $request, $width, $height, $background, $foreground, $name) use ($app, $moleculeRenderer, $smilesConverter) {
-    
+
         // Convert chemical name to SMILES if we can.
         $smiles = $smilesConverter->nameToSmiles($name);
 
@@ -89,6 +95,9 @@ $app->get('/api/name/{width}/{height}/{background}/{foreground}/{name}',
 
             // Add label.
             $moleculeRenderer->setCustomLabel($request->get('label'));
+
+            // Add rotation.
+            $moleculeRenderer->setRotation((float) $request->get('rotation'));
 
             // Render molecule with background.
             $image = $moleculeRenderer->renderMoleculeWithBackground($smiles, $foreground, $background, $width, $height);
@@ -115,6 +124,9 @@ $app->get('/api/name/{width}/{height}/{color}/{name}',
 
             // Add label.
             $moleculeRenderer->setCustomLabel($request->get('label'));
+
+            // Add rotation.
+            $moleculeRenderer->setRotation((float) $request->get('rotation'));
 
             // Render molecule only.
             $image = $moleculeRenderer->renderScaledMolecule($smiles, $color, $width, $height);
