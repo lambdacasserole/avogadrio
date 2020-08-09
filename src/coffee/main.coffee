@@ -63,6 +63,7 @@ $(document).ready ->
     url = "/api/name/#{width}/#{height}/#{background}/#{foreground}/#{name}"
     qs = ""
     if customLabel != '' then qs += "label=#{customLabel}"
+    if qs != '' then qs += "&"
     if rotation != 0 then qs += "rotation=#{rotation}"
     return if qs == "" then url else url + "?" + qs
 
@@ -77,6 +78,7 @@ $(document).ready ->
     url = "/api/name/#{width}/#{height}/#{foreground}/#{name}"
     qs = ""
     if customLabel != '' then qs += "label=#{customLabel}"
+    if qs != '' then qs += "&"
     if rotation != 0 then qs += "rotation=#{rotation}"
     return if qs == "" then url else url + "?" + qs
 
@@ -92,6 +94,7 @@ $(document).ready ->
     url = "/api/smiles/#{width}/#{height}/#{background}/#{foreground}/#{smiles}"
     qs = ""
     if customLabel != '' then qs += "label=#{customLabel}"
+    if qs != '' then qs += "&"
     if rotation != 0 then qs += "rotation=#{rotation}"
     return if qs == "" then url else url + "?" + qs
 
@@ -106,6 +109,7 @@ $(document).ready ->
     url = "/api/smiles/#{width}/#{height}/#{foreground}/#{smiles}"
     qs = ""
     if customLabel != '' then qs += "label=#{customLabel}"
+    if qs != '' then qs += "&"
     if rotation != 0 then qs += "rotation=#{rotation}"
     return if qs == "" then url else url + "?" + qs
 
