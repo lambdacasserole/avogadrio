@@ -19,7 +19,7 @@ A couple of files need changing to get the site working for you.
 
 1. Copy `config/config.yaml.dist` and rename it to `config.yaml`. Fill in the fields according to their descriptions and save.
 2. For `sourire_service` you'll want to point it to your local [Sourire](https://github.com/tmoerman/sourire) server. For example `http://localhost:8080/`.
-3. Create a file at `templates/_analytics.txt` for your analytics code. Leave it blank if you like, but you must create it.
+3. Create files at `templates/_analytics.html.twig` for your analytics code and `templates/_donations.html.twig` for any donation buttons. Leave them blank if you like, but you must create them.
 
 ## Building
 Clone the project down and open the folder in your favourite editor. It's a JetBrains PhpStorm project but you can use whichever paid/free software takes your fancy.
@@ -63,3 +63,4 @@ A big thank you to:
 * [Jay Holtslander](https://codepen.io/j_holtslander/) put together the hamburger menu/sidebar combo in his [Pen](https://codepen.io/j_holtslander/pen/XmpMEp) on CodePen. I believe it's derived from earlier work by [maridlcrmn](https://bootsnipp.com/maridlcrmn).
 * [Thomas Moerman](https://github.com/tmoerman) created [Sourire](https://github.com/tmoerman/sourire), which really simplified the molecule rendering process.
 * [Andre Plötze](https://github.com/andrepxx) created [pure-knob](https://github.com/andrepxx/pure-knob), which is used here for the rotation knob/wheel/dial thing.
+* [Contributors to this awesome repo](https://github.com/spothq/cryptocurrency-icons) which provides the cryptocurrency donation icons in the web app (they aren't bundled here).

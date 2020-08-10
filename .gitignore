@@ -62,6 +62,7 @@ phpunit.phar
 # Sensitive
 /config/config.yaml
 /templates/_analytics.html.twig
+/templates/_donations.html.twig
 
 # Compiled code
 /web/js/
